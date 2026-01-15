@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Barbershop Booking Platform - Frontend
 
-## Getting Started
+O'zbekistondagi barbershoplar uchun online bron qilish platformasi.
 
-First, run the development server:
+## Texnologiyalar
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js 16** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+- **Zustand** - State management
+- **Lucide React** - Icons
+- **date-fns** - Date utilities
+
+## Loyiha tuzilishi
+
+```
+barbershop-client/
+├── app/                    # Next.js App Router
+│   ├── page.tsx           # Bosh sahifa
+│   ├── search/            # Qidirish sahifasi
+│   ├── barbershop/[id]/   # Barbershop detallari
+│   └── cart/              # Savat sahifasi
+├── components/            # React komponentlar
+│   ├── Header.tsx         # Navigation header
+│   ├── AuthModal.tsx     # Authentication modal
+│   ├── BarbershopCard.tsx # Barbershop kartasi
+│   └── ServiceCard.tsx    # Xizmat kartasi
+├── lib/                   # Utilities va helpers
+│   ├── api/               # API client (backend uchun tayyor)
+│   ├── stores/           # Zustand stores
+│   └── data.ts           # Static mock data
+├── types/                # TypeScript types
+└── public/               # Static files
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## O'rnatish va ishga tushirish
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Dependencies o'rnatish
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Development server ishga tushirish
+npm run dev
 
-## Learn More
+# Production build
+npm run build
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+Sayt `http://localhost:3000` da ochiladi.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Asosiy funksiyalar
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### ✅ Bajarilgan
 
-## Deploy on Vercel
+1. **Authentication (Auth)**
+   - Login/Register modallari
+   - Zustand store bilan state management
+   - LocalStorage'da saqlash
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Search (Qidirish)**
+   - Barbershop qidirish
+   - Filtrlar (shahar, tuman, reyting)
+   - Real-time search
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **Booking (Bron)**
+   - Barbershop tanlash
+   - Xizmat tanlash
+   - Sana va vaqt tanlash
+   - Time slot availability
+
+4. **Cart (Savat)**
+   - Multiple bookings
+   - Cart management
+   - Total price calculation
+
+5. **UI/UX**
+   - Modern va chiroyli dizayn
+   - Framer Motion animatsiyalar
+   - Responsive design
+   - Interactive elements
+
+## API Integratsiyasi
+
+Frontend allaqachon API integratsiyasi uchun tayyorlangan. `lib/api/client.ts` faylida API client mavjud.
+
+Backend tayyor bo'lganda:
+1. `.env.local` faylida `NEXT_PUBLIC_API_URL` o'rnating
+2. `lib/stores/authStore.ts` va `lib/stores/cartStore.ts` da mock funksiyalarni API chaqiruvlari bilan almashtiring
+3. `lib/api/client.ts` da API endpoints'larni to'g'ri sozlang
+
+Batafsil ma'lumot uchun `TZ_BACKEND.md` faylini ko'ring.
+
+## Static Data
+
+Hozircha static mock data ishlatilmoqda (`lib/data.ts`):
+- 4 ta barbershop
+- 5 ta xizmat turi
+- 4 ta barber
+
+Backend tayyor bo'lganda, bu data API'dan keladi.
+
+## Keyingi qadamlar
+
+1. Backend API integratsiyasi
+2. Real-time notifications
+3. Payment integration
+4. Reviews va ratings
+5. Admin panel
+
+## Muallif
+
+Senior Developer
