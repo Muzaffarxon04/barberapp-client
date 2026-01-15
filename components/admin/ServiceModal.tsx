@@ -161,7 +161,7 @@ export default function ServiceModal({
 
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Narx (so'm) *
+                        Narx (som) *
                       </label>
                       <input
                         type="number"
