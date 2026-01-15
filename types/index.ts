@@ -33,8 +33,7 @@ export interface WorkingHours {
 
 export interface Service {
   id: string;
-  name: string;
-  nameUz?: string;
+  name: string; // Uzbek name
   description?: string;
   duration: number; // in minutes
   price: number;

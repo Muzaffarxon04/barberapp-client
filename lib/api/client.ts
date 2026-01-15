@@ -97,6 +97,72 @@ class ApiClient {
     getByBarbershop: (barbershopId: string) =>
       this.request(`/services?barbershopId=${barbershopId}`),
   };
+
+  // Admin endpoints
+  admin = {
+    // Dashboard stats
+    dashboard: {
+      getStats: () => this.request('/admin/dashboard/stats'),
+    },
+
+    // Barbershops management
+    barbershops: {
+      getAll: (filters?: any) => {
+        const queryParams = filters ? `?${new URLSearchParams(filters).toString()}` : '';
+        return this.request(`/admin/barbershops${queryParams}`);
+      },
+      getById: (id: string) => this.request(`/admin/barbershops/${id}`),
+      create: (data: any) =>
+        this.request('/admin/barbershops', {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
+      update: (id: string, data: any) =>
+        this.request(`/admin/barbershops/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        }),
+      delete: (id: string) =>
+        this.request(`/admin/barbershops/${id}`, { method: 'DELETE' }),
+    },
+
+    // Services management
+    services: {
+      getAll: (filters?: any) => {
+        const queryParams = filters ? `?${new URLSearchParams(filters).toString()}` : '';
+        return this.request(`/admin/services${queryParams}`);
+      },
+      getById: (id: string) => this.request(`/admin/services/${id}`),
+      create: (data: any) =>
+        this.request('/admin/services', {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
+      update: (id: string, data: any) =>
+        this.request(`/admin/services/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        }),
+      delete: (id: string) =>
+        this.request(`/admin/services/${id}`, { method: 'DELETE' }),
+    },
+
+    // Bookings management
+    bookings: {
+      getAll: (filters?: any) => {
+        const queryParams = filters ? `?${new URLSearchParams(filters).toString()}` : '';
+        return this.request(`/admin/bookings${queryParams}`);
+      },
+      getById: (id: string) => this.request(`/admin/bookings/${id}`),
+      updateStatus: (id: string, status: string) =>
+        this.request(`/admin/bookings/${id}/status`, {
+          method: 'PATCH',
+          body: JSON.stringify({ status }),
+        }),
+      cancel: (id: string) =>
+        this.request(`/admin/bookings/${id}/cancel`, { method: 'POST' }),
+    },
+  };
 }
 
 export const api = new ApiClient(API_BASE_URL);

@@ -93,7 +93,7 @@ export default function BarbershopDetailPage() {
       barbershopImage: barbershop.image,
       barbershopAddress: barbershop.address,
       serviceId: service.id,
-      serviceName: service.nameUz || service.name,
+      serviceName: service.name,
       barberId: barber?.id,
       barberName: barber?.name,
       date: selectedDate,

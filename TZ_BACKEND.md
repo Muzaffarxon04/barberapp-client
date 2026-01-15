@@ -196,7 +196,6 @@ Response (200):
     {
       "id": "string",
       "name": "string",
-      "nameUz": "string (optional)",
       "description": "string (optional)",
       "duration": number, // in minutes
       "price": number,
@@ -431,7 +430,6 @@ Response (200):
 {
   id: string;
   name: string;
-  nameUz?: string;
   description?: string;
   duration: number; // minutes
   price: number;

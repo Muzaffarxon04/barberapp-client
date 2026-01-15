@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
+import ConditionalHeader from "@/components/ConditionalHeader";
 import Toaster from "@/components/Toaster";
 
 const inter = Inter({
@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="uz">
       <body className={`${inter.variable} antialiased`}>
-        <Header />
+        <ConditionalHeader />
         <main className="min-h-screen">{children}</main>
         <Toaster />
       </body>
