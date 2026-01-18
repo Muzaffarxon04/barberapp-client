@@ -60,9 +60,9 @@ export default function AdminBookingsPage() {
       setBookings(
         bookings.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
       );
-      toast.success('Status yangilandi');
+      toast.success('Status updated');
     } catch (error) {
-      toast.error('Xatolik yuz berdi');
+      toast.error('An error occurred');
     }
   };
 
@@ -84,13 +84,13 @@ export default function AdminBookingsPage() {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return 'Tasdiqlangan';
+        return 'Confirmed';
       case 'pending':
-        return 'Kutilmoqda';
+        return 'Pending';
       case 'completed':
-        return 'Yakunlangan';
+        return 'Completed';
       case 'cancelled':
-        return 'Bekor qilingan';
+        return 'Cancelled';
       default:
         return status;
     }
@@ -100,8 +100,8 @@ export default function AdminBookingsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Bronlar</h1>
-        <p className="text-gray-600">Barcha bookinglarni boshqarish</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Bookings</h1>
+        <p className="text-gray-600">Manage all bookings</p>
       </div>
 
       {/* Filters */}
@@ -111,7 +111,7 @@ export default function AdminBookingsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Qidirish..."
+              placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white"
@@ -122,11 +122,11 @@ export default function AdminBookingsPage() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
           >
-            <option value="all">Barcha statuslar</option>
-            <option value="pending">Kutilmoqda</option>
-            <option value="confirmed">Tasdiqlangan</option>
-            <option value="completed">Yakunlangan</option>
-            <option value="cancelled">Bekor qilingan</option>
+            <option value="all">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
           </select>
         </div>
       </div>
@@ -138,25 +138,25 @@ export default function AdminBookingsPage() {
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                  Mijoz
+                  Customer
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
                   Barbershop
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                  Xizmat
+                  Service
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                  Sana/Vaqt
+                  Date/Time
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                  Narx
+                  Price
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                  Harakatlar
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -186,7 +186,7 @@ export default function AdminBookingsPage() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="font-medium text-gray-900">
-                      {booking.price.toLocaleString()} so'm
+                      ${booking.price.toLocaleString()}
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -204,7 +204,7 @@ export default function AdminBookingsPage() {
                         <button
                           onClick={() => handleStatusChange(booking.id, 'confirmed')}
                           className="p-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
-                          title="Tasdiqlash"
+                          title="Confirm"
                         >
                           <CheckCircle className="h-4 w-4" />
                         </button>
@@ -213,7 +213,7 @@ export default function AdminBookingsPage() {
                         <button
                           onClick={() => handleStatusChange(booking.id, 'cancelled')}
                           className="p-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors"
-                          title="Bekor qilish"
+                          title="Cancel"
                         >
                           <XCircle className="h-4 w-4" />
                         </button>
@@ -222,7 +222,7 @@ export default function AdminBookingsPage() {
                         <button
                           onClick={() => handleStatusChange(booking.id, 'completed')}
                           className="p-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
-                          title="Yakunlash"
+                          title="Complete"
                         >
                           <Clock className="h-4 w-4" />
                         </button>
@@ -238,7 +238,7 @@ export default function AdminBookingsPage() {
 
       {filteredBookings.length === 0 && (
         <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
-          <p className="text-gray-600">Hech narsa topilmadi</p>
+          <p className="text-gray-600">Nothing found</p>
         </div>
       )}
     </div>

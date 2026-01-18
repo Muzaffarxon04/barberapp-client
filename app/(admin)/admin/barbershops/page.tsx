@@ -42,9 +42,9 @@ export default function AdminBarbershopsPage() {
         barbers: [],
       };
       setBarbershops([...barbershops, newBarbershop]);
-      toast.success('Barbershop qo\'shildi');
+      toast.success('Barbershop added');
     } catch (error) {
-      toast.error('Xatolik yuz berdi');
+      toast.error('An error occurred');
       throw error;
     }
   };
@@ -62,7 +62,7 @@ export default function AdminBarbershopsPage() {
       );
       toast.success('Barbershop yangilandi');
     } catch (error) {
-      toast.error('Xatolik yuz berdi');
+      toast.error('An error occurred');
       throw error;
     }
   };
@@ -74,11 +74,11 @@ export default function AdminBarbershopsPage() {
       // TODO: Replace with actual API call
       // await api.admin.barbershops.delete(selectedBarbershop.id);
       setBarbershops(barbershops.filter((bs) => bs.id !== selectedBarbershop.id));
-      toast.success('Barbershop o\'chirildi');
+      toast.success('Barbershop deleted');
       setIsDeleteModalOpen(false);
       setSelectedBarbershop(null);
     } catch (error) {
-      toast.error('Xatolik yuz berdi');
+      toast.error('An error occurred');
     }
   };
 
@@ -97,15 +97,15 @@ export default function AdminBarbershopsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Barbershoplar</h1>
-          <p className="text-gray-600">Barcha barbershoplarni boshqarish</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Barbershops</h1>
+          <p className="text-gray-600">Manage all barbershops</p>
         </div>
         <button
           onClick={() => setIsCreateModalOpen(true)}
           className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
         >
           <Plus className="h-5 w-5" />
-          Yangi barbershop
+          New Barbershop
         </button>
       </div>
 
@@ -113,7 +113,7 @@ export default function AdminBarbershopsPage() {
       <div className="bg-white rounded-xl p-4 border border-gray-200">
         <input
           type="text"
-          placeholder="Barbershop qidirish..."
+          placeholder="Search barbershops..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white"
@@ -158,7 +158,7 @@ export default function AdminBarbershopsPage() {
               </div>
 
               <div className="text-sm text-gray-600">
-                <span className="font-medium">{barbershop.services.length} xizmat</span>
+                <span className="font-medium">{barbershop.services.length} services</span>
               </div>
 
               {/* Actions */}
@@ -168,7 +168,7 @@ export default function AdminBarbershopsPage() {
                   className="flex-1 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg font-medium hover:bg-blue-100 transition-colors flex items-center justify-center gap-2"
                 >
                   <Edit className="h-4 w-4" />
-                  Tahrirlash
+                  Edit
                 </button>
                 <button
                   onClick={() => openDeleteModal(barbershop)}
@@ -184,7 +184,7 @@ export default function AdminBarbershopsPage() {
 
       {filteredBarbershops.length === 0 && (
         <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
-          <p className="text-gray-600">Hech narsa topilmadi</p>
+          <p className="text-gray-600">Nothing found</p>
         </div>
       )}
 
@@ -214,10 +214,10 @@ export default function AdminBarbershopsPage() {
           setSelectedBarbershop(null);
         }}
         onConfirm={handleDelete}
-        title="Barbershopni o'chirish"
-        message={`"${selectedBarbershop?.name}" barbershopini o'chirishni xohlaysizmi? Bu amalni qaytarib bo'lmaydi.`}
-        confirmText="O'chirish"
-        cancelText="Bekor qilish"
+        title="Delete Barbershop"
+        message={`Are you sure you want to delete "${selectedBarbershop?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
         variant="danger"
       />
     </div>

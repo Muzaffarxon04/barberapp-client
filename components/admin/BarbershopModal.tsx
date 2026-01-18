@@ -91,7 +91,7 @@ export default function BarbershopModal({
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <h2 className="text-2xl font-bold text-gray-900">
-                  {mode === 'create' ? 'Yangi barbershop qo\'shish' : 'Barbershop tahrirlash'}
+                  {mode === 'create' ? 'Add New Barbershop' : 'Edit Barbershop'}
                 </h2>
                 <button
                   onClick={onClose}
@@ -106,7 +106,7 @@ export default function BarbershopModal({
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-semibold mb-2 text-gray-700">
-                      Barbershop nomi *
+                      Barbershop Name *
                     </label>
                     <input
                       type="text"
@@ -114,13 +114,13 @@ export default function BarbershopModal({
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                      placeholder="Barbershop nomi"
+                      placeholder="Barbershop name"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-semibold mb-2 text-gray-700">
-                      Tavsif *
+                      Description *
                     </label>
                     <textarea
                       required
@@ -128,14 +128,14 @@ export default function BarbershopModal({
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       rows={4}
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 resize-none"
-                      placeholder="Barbershop tavsifi"
+                      placeholder="Barbershop description"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Shahar *
+                        City *
                       </label>
                       <select
                         required
@@ -153,7 +153,7 @@ export default function BarbershopModal({
 
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Tuman *
+                        District *
                       </label>
                       <select
                         required
@@ -161,7 +161,7 @@ export default function BarbershopModal({
                         onChange={(e) => setFormData({ ...formData, district: e.target.value })}
                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
                       >
-                        <option value="">Tanlang</option>
+                        <option value="">Select</option>
                         {districts.map((district) => (
                           <option key={district} value={district}>
                             {district}
@@ -173,7 +173,7 @@ export default function BarbershopModal({
 
                   <div>
                     <label className="block text-sm font-semibold mb-2 text-gray-700">
-                      Manzil *
+                      Address *
                     </label>
                     <input
                       type="text"
@@ -181,14 +181,14 @@ export default function BarbershopModal({
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                      placeholder="To'liq manzil"
+                      placeholder="Full address"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Telefon *
+                        Phone *
                       </label>
                       <input
                         type="tel"
@@ -222,14 +222,14 @@ export default function BarbershopModal({
                     onClick={onClose}
                     className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                   >
-                    Bekor qilish
+                    Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
                     className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
                   >
-                    {loading ? 'Saqlanmoqda...' : 'Saqlash'}
+                    {loading ? 'Saving...' : 'Save'}
                   </button>
                 </div>
               </form>

@@ -29,12 +29,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     try {
       if (isLogin) {
         await login(formData.email, formData.password);
-        toast.success('Muvaffaqiyatli kirildi!', {
+        toast.success('Successfully logged in!', {
           icon: '👋',
         });
       } else {
         await register(formData.name, formData.email, formData.phone, formData.password);
-        toast.success('Ro\'yxatdan muvaffaqiyatli o\'tdingiz!', {
+        toast.success('Successfully registered!', {
           icon: '🎉',
         });
       }
@@ -42,7 +42,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       setFormData({ name: '', email: '', phone: '', password: '' });
     } catch (error) {
       console.error('Auth error:', error);
-      toast.error('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.');
+      toast.error('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -67,7 +67,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           >
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {isLogin ? 'Kirish' : 'Ro\'yxatdan o\'tish'}
+                {isLogin ? 'Login' : 'Register'}
               </h2>
               <button
                 onClick={onClose}
@@ -80,14 +80,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-700">Ism</label>
+                  <label className="block text-sm font-semibold mb-2 text-gray-700">Name</label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                    placeholder="Ismingizni kiriting"
+                    placeholder="Enter your name"
                   />
                 </div>
               )}
@@ -106,7 +106,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
               {!isLogin && (
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-700">Telefon</label>
+                  <label className="block text-sm font-semibold mb-2 text-gray-700">Phone</label>
                   <input
                     type="tel"
                     required
@@ -119,7 +119,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               )}
 
               <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-700">Parol</label>
+                <label className="block text-sm font-semibold mb-2 text-gray-700">Password</label>
                 <input
                   type="password"
                   required
@@ -135,7 +135,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 disabled={loading}
                 className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed mt-2"
               >
-                {loading ? 'Kutilmoqda...' : isLogin ? 'Kirish' : 'Ro\'yxatdan o\'tish'}
+                {loading ? 'Loading...' : isLogin ? 'Login' : 'Register'}
               </button>
             </form>
 
@@ -145,8 +145,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 className="text-sm text-blue-600 hover:text-blue-700 font-semibold hover:underline"
               >
                 {isLogin
-                  ? "Hisobingiz yo'qmi? Ro'yxatdan o'ting"
-                  : "Allaqachon hisobingiz bormi? Kirish"}
+                  ? "Don't have an account? Register"
+                  : "Already have an account? Login"}
               </button>
             </div>
           </motion.div>

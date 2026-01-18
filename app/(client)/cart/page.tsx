@@ -15,18 +15,18 @@ export default function CartPage() {
 
   const handleCheckout = async () => {
     if (!isAuthenticated) {
-      toast.error('Avval tizimga kiring', {
+      toast.error('Please log in first', {
         duration: 4000,
       });
       return;
     }
 
     if (items.length === 0) {
-      toast.error('Savat bo\'sh');
+      toast.error('Cart is empty');
       return;
     }
 
-    const loadingToast = toast.loading('Bron qilinmoqda...');
+    const loadingToast = toast.loading('Booking...');
 
     try {
       // TODO: Replace with actual API call
@@ -36,7 +36,7 @@ export default function CartPage() {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       toast.dismiss(loadingToast);
-      toast.success('Bron muvaffaqiyatli amalga oshirildi!', {
+      toast.success('Booking completed successfully!', {
         icon: '🎉',
         duration: 4000,
       });
@@ -47,7 +47,7 @@ export default function CartPage() {
       }, 1500);
     } catch (error) {
       toast.dismiss(loadingToast);
-      toast.error('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.');
+      toast.error('An error occurred. Please try again.');
     }
   };
 
@@ -63,15 +63,15 @@ export default function CartPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-2xl opacity-20" />
             <Scissors className="h-20 w-20 text-gray-400 mx-auto relative z-10" />
           </div>
-          <h2 className="text-3xl font-bold mb-3 text-gray-900">Savat bo'sh</h2>
+          <h2 className="text-3xl font-bold mb-3 text-gray-900">Cart is Empty</h2>
           <p className="text-gray-700 mb-8 text-lg leading-relaxed">
-            Savatga xizmat qo'shish uchun barbershop tanlang
+            Select a barbershop to add services to your cart
           </p>
           <button
             onClick={() => router.push('/')}
             className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
           >
-            Barbershoplarni ko'rish
+            View Barbershops
           </button>
         </motion.div>
       </div>
@@ -85,7 +85,7 @@ export default function CartPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-4xl font-bold mb-8 text-gray-800">Savat</h1>
+          <h1 className="text-4xl font-bold mb-8 text-gray-800">Cart</h1>
 
           <div className="space-y-4 mb-8">
             {items.map((item, index) => (
@@ -128,14 +128,14 @@ export default function CartPage() {
                     <button
                       onClick={() => {
                         removeFromCart(item.id);
-                        toast.success('Savatdan olib tashlandi');
+                        toast.success('Removed from cart');
                       }}
                       className="p-2 hover:bg-red-50 rounded-lg transition-colors mb-2"
                     >
                       <Trash2 className="h-5 w-5 text-red-500" />
                     </button>
                     <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                      {item.price.toLocaleString()} so'm
+                      ${item.price.toLocaleString()}
                     </div>
                   </div>
                 </div>
@@ -152,17 +152,17 @@ export default function CartPage() {
           >
             <div className="space-y-4 mb-6">
               <div className="flex justify-between text-lg text-gray-700">
-                <span>Jami xizmatlar:</span>
+                <span>Total Services:</span>
                 <span className="font-semibold">{items.length}</span>
               </div>
               <div className="flex justify-between text-lg text-gray-700">
-                <span>Jami vaqt:</span>
+                <span>Total Time:</span>
                 <span className="font-semibold">{getTotalDuration()} min</span>
               </div>
               <div className="flex justify-between text-2xl font-bold pt-4 border-t border-gray-200">
-                <span className="text-gray-800">Jami:</span>
+                <span className="text-gray-800">Total:</span>
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {getTotalPrice().toLocaleString()} so'm
+                  ${getTotalPrice().toLocaleString()}
                 </span>
               </div>
             </div>
@@ -171,17 +171,17 @@ export default function CartPage() {
               <button
                 onClick={() => {
                   clearCart();
-                  toast.success('Savat tozalandi');
+                  toast.success('Cart cleared');
                 }}
                 className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                Savatni tozalash
+                Clear Cart
               </button>
               <button
                 onClick={handleCheckout}
                 className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
               >
-                Bron qilish
+                Book Now
               </button>
             </div>
           </motion.div>

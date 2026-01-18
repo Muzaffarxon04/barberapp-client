@@ -121,7 +121,7 @@ export default function Home() {
               Barbershop Booking
             </h1>
             <p className="text-xl text-white/95 mb-8 drop-shadow-md">
-              O'zbekistondagi eng yaxshi barbershoplarni toping va online bron qiling
+              Find the best barbershops in Uzbekistan and book online
             </p>
 
             {/* Search Bar with Dropdown */}
@@ -137,7 +137,7 @@ export default function Home() {
                   <Search className="h-5 w-5 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Barbershop nomi, manzil yoki xizmat qidiring..."
+                    placeholder="Search barbershop name, address or service..."
                     value={searchQuery}
                     onChange={(e) => handleSearchChange(e.target.value)}
                     onFocus={() => {
@@ -202,7 +202,7 @@ export default function Home() {
                             <div className="flex items-center gap-2">
                               <Scissors className="h-3 w-3 text-blue-500 flex-shrink-0" />
                               <span className="text-xs text-gray-500 text-left">
-                                {barbershop.services.length} xizmat
+                                {barbershop.services.length} services
                               </span>
                             </div>
                           </div>
@@ -243,7 +243,7 @@ export default function Home() {
               <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
                 {mockBarbershops.length}+
               </div>
-              <div className="text-gray-600 font-medium">Barbershoplar</div>
+              <div className="text-gray-600 font-medium">Barbershops</div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -253,7 +253,7 @@ export default function Home() {
               className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
             >
               <div className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">1000+</div>
-              <div className="text-gray-600 font-medium">Mamnun mijozlar</div>
+              <div className="text-gray-600 font-medium">Happy Customers</div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -263,7 +263,7 @@ export default function Home() {
               className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
             >
               <div className="text-5xl font-bold bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent mb-2">24/7</div>
-              <div className="text-gray-600 font-medium">Online bron</div>
+              <div className="text-gray-600 font-medium">Online Booking</div>
             </motion.div>
           </div>
         </div>
@@ -278,9 +278,9 @@ export default function Home() {
             viewport={{ once: true }}
             className="mb-8"
           >
-            <h2 className="text-3xl font-bold mb-2 text-gray-800">Top Barbershoplar</h2>
+            <h2 className="text-3xl font-bold mb-2 text-gray-800">Top Barbershops</h2>
             <p className="text-gray-600">
-              Eng yaxshi reytingga ega barbershoplar
+              Best rated barbershops
             </p>
           </motion.div>
 
@@ -297,7 +297,7 @@ export default function Home() {
               className="text-center py-12"
             >
               <p className="text-gray-600 text-lg">
-                Hech narsa topilmadi. Boshqa qidiruv so'zlarini sinab ko'ring.
+                Nothing found. Try different search terms.
               </p>
             </motion.div>
           )}

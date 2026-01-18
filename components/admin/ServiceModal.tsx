@@ -37,12 +37,12 @@ export default function ServiceModal({
   const [loading, setLoading] = useState(false);
 
   const categories: Array<{ value: Service['category']; label: string }> = [
-    { value: 'haircut', label: 'Soch olish' },
-    { value: 'beard', label: 'Soqol tuzatish' },
-    { value: 'haircut-beard', label: 'Soch + Soqol' },
-    { value: 'coloring', label: 'Soch bo\'yash' },
-    { value: 'styling', label: 'Soch stilizatsiyasi' },
-    { value: 'other', label: 'Boshqa' },
+    { value: 'haircut', label: 'Haircut' },
+    { value: 'beard', label: 'Beard Trim' },
+    { value: 'haircut-beard', label: 'Haircut + Beard' },
+    { value: 'coloring', label: 'Hair Coloring' },
+    { value: 'styling', label: 'Hair Styling' },
+    { value: 'other', label: 'Other' },
   ];
 
   useEffect(() => {
@@ -100,7 +100,7 @@ export default function ServiceModal({
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <h2 className="text-2xl font-bold text-gray-900">
-                  {mode === 'create' ? 'Yangi xizmat qo\'shish' : 'Xizmat tahrirlash'}
+                  {mode === 'create' ? 'Add New Service' : 'Edit Service'}
                 </h2>
                 <button
                   onClick={onClose}
@@ -115,7 +115,7 @@ export default function ServiceModal({
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-semibold mb-2 text-gray-700">
-                      Xizmat nomi *
+                      Service Name *
                     </label>
                     <input
                       type="text"
@@ -123,27 +123,27 @@ export default function ServiceModal({
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                      placeholder="Xizmat nomi"
+                      placeholder="Service name"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-semibold mb-2 text-gray-700">
-                      Tavsif
+                      Description
                     </label>
                     <textarea
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       rows={3}
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 resize-none"
-                      placeholder="Xizmat tavsifi"
+                      placeholder="Service description"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Kategoriya *
+                        Category *
                       </label>
                       <select
                         required
@@ -161,7 +161,7 @@ export default function ServiceModal({
 
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Narx (som) *
+                        Price ($) *
                       </label>
                       <input
                         type="number"
@@ -176,7 +176,7 @@ export default function ServiceModal({
 
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Davomiyligi (min) *
+                        Duration (min) *
                       </label>
                       <input
                         type="number"
@@ -199,14 +199,14 @@ export default function ServiceModal({
                     onClick={onClose}
                     className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                   >
-                    Bekor qilish
+                    Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
                     className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
                   >
-                    {loading ? 'Saqlanmoqda...' : 'Saqlash'}
+                    {loading ? 'Saving...' : 'Save'}
                   </button>
                 </div>
               </form>

@@ -27,13 +27,13 @@ export default function SearchPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-bold mb-6 text-gray-800">Barbershop qidirish</h1>
+          <h1 className="text-4xl font-bold mb-6 text-gray-800">Search Barbershops</h1>
           <div className="mb-4">
             <div className="relative w-full">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Barbershop nomi, manzil yoki xizmat qidiring..."
+                placeholder="Search barbershop name, address or service..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
@@ -43,7 +43,7 @@ export default function SearchPage() {
 
           {/* Results Count */}
           <div className="text-sm text-gray-600 font-medium mb-4">
-            {filteredBarbershops.length} ta natija topildi
+            {filteredBarbershops.length} results found
           </div>
         </motion.div>
 
@@ -61,7 +61,7 @@ export default function SearchPage() {
             className="text-center py-12"
           >
             <p className="text-gray-600 text-lg">
-              Hech narsa topilmadi. Boshqa qidiruv so'zlarini sinab ko'ring.
+              Nothing found. Try different search terms.
             </p>
           </motion.div>
         )}

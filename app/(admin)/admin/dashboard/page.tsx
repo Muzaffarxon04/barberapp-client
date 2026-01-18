@@ -37,7 +37,7 @@ export default function AdminDashboard() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-        <p className="text-gray-600">Barbershop booking platform boshqaruvi</p>
+        <p className="text-gray-600">Barbershop booking platform management</p>
       </div>
 
       {/* Stats Cards */}
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="text-3xl font-bold text-gray-900 mb-1">{stats.totalServices}</div>
-          <div className="text-sm text-gray-600">Jami Xizmatlar</div>
+          <div className="text-sm text-gray-600">Total Services</div>
         </motion.div>
 
         <motion.div
@@ -83,7 +83,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="text-3xl font-bold text-gray-900 mb-1">{stats.totalBookings}</div>
-          <div className="text-sm text-gray-600">Jami Bronlar</div>
+          <div className="text-sm text-gray-600">Total Bookings</div>
         </motion.div>
 
         <motion.div
@@ -98,13 +98,13 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="text-3xl font-bold text-gray-900 mb-1">{stats.activeUsers}</div>
-          <div className="text-sm text-gray-600">Faol Foydalanuvchilar</div>
+          <div className="text-sm text-gray-600">Active Users</div>
         </motion.div>
       </div>
 
       {/* Recent Bookings */}
       <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">So'nggi bronlar</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Bookings</h2>
         <div className="space-y-4">
           {recentBookings.map((booking) => (
             <div
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
                     : 'bg-yellow-100 text-yellow-700'
                 }`}
               >
-                {booking.status === 'confirmed' ? 'Tasdiqlangan' : 'Kutilmoqda'}
+                {booking.status === 'confirmed' ? 'Confirmed' : 'Pending'}
               </span>
             </div>
           ))}

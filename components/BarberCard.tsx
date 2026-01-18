@@ -41,7 +41,7 @@ export default function BarberCard({ barber, selected, onSelect, disabled }: Bar
             <p className="text-sm text-gray-600 mb-1">{barber.specialization}</p>
           )}
           {barber.experience && (
-            <p className="text-xs text-gray-500">{barber.experience} yil tajriba</p>
+            <p className="text-xs text-gray-500">{barber.experience} years experience</p>
           )}
         </div>
         {selected && (

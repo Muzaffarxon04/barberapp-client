@@ -28,7 +28,7 @@ export default function BarbershopDetailPage() {
   if (!barbershop) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-xl">Barbershop topilmadi</p>
+        <p className="text-xl">Barbershop not found</p>
       </div>
     );
   }
@@ -68,12 +68,12 @@ export default function BarbershopDetailPage() {
 
   const handleAddToCart = () => {
     if (!selectedService || !selectedDate || !selectedTime) {
-      toast.error('Iltimos, xizmat, sana va vaqtni tanlang');
+      toast.error('Please select service, date and time');
       return;
     }
 
     if (!isAuthenticated) {
-      toast.error('Avval tizimga kiring', {
+      toast.error('Please log in first', {
         duration: 4000,
       });
       return;
@@ -102,7 +102,7 @@ export default function BarbershopDetailPage() {
       duration: service.duration,
     });
 
-    toast.success('Savatga qo\'shildi!', {
+    toast.success('Added to cart!', {
       icon: '✅',
     });
     router.push('/cart');
@@ -134,7 +134,7 @@ export default function BarbershopDetailPage() {
           <div className="flex flex-wrap items-center gap-4 text-white/95">
             <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
               <Scissors className="h-5 w-5" />
-              <span className="font-bold">{barbershop.services.length} xizmat</span>
+              <span className="font-bold">{barbershop.services.length} services</span>
             </div>
             <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
               <MapPin className="h-5 w-5" />
@@ -154,7 +154,7 @@ export default function BarbershopDetailPage() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm"
             >
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">Haqida</h2>
+              <h2 className="text-2xl font-bold mb-4 text-gray-800">About</h2>
               <p className="text-gray-600 leading-relaxed">{barbershop.description}</p>
             </motion.section>
 
@@ -165,7 +165,7 @@ export default function BarbershopDetailPage() {
               transition={{ delay: 0.1 }}
               className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm"
             >
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">Xizmatlar</h2>
+              <h2 className="text-2xl font-bold mb-4 text-gray-800">Services</h2>
               <div className="space-y-3">
                 {barbershop.services.map((service) => (
                   <ServiceCard
@@ -186,11 +186,11 @@ export default function BarbershopDetailPage() {
                 transition={{ delay: 0.2 }}
                 className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm"
               >
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">Barber tanlang</h2>
+                <h2 className="text-2xl font-bold mb-4 text-gray-800">Select Barber</h2>
                 <p className="text-sm text-gray-600 mb-4">
                   {selectedService
-                    ? 'Quyidagi barberlar tanlangan xizmatni bajaradi'
-                    : 'Avval xizmat tanlang'}
+                    ? 'The following barbers can perform the selected service'
+                    : 'Please select a service first'}
                 </p>
                 <div className="space-y-3">
                   {availableBarbers.map((barber) => (
@@ -204,7 +204,7 @@ export default function BarbershopDetailPage() {
                 </div>
                 {availableBarbers.length === 0 && (
                   <p className="text-gray-600 text-center py-4">
-                    Bu xizmat uchun mavjud barberlar yo'q
+                    No barbers available for this service
                   </p>
                 )}
               </motion.section>
@@ -218,7 +218,7 @@ export default function BarbershopDetailPage() {
                 transition={{ delay: 0.3 }}
                 className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm"
               >
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">Barcha barberlar</h2>
+                <h2 className="text-2xl font-bold mb-4 text-gray-800">All Barbers</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {barbershop.barbers.map((barber) => (
                     <div
@@ -246,11 +246,11 @@ export default function BarbershopDetailPage() {
               animate={{ opacity: 1, x: 0 }}
               className="sticky top-24 bg-white border border-gray-200 rounded-2xl p-6 space-y-6 shadow-lg"
             >
-              <h3 className="text-xl font-bold text-gray-800">Bron qilish</h3>
+              <h3 className="text-xl font-bold text-gray-800">Book Appointment</h3>
 
               {/* Date Selection */}
               <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-700">Sana</label>
+                <label className="block text-sm font-semibold mb-2 text-gray-700">Date</label>
                 <input
                   type="date"
                   min={format(new Date(), 'yyyy-MM-dd')}
@@ -263,7 +263,7 @@ export default function BarbershopDetailPage() {
               {/* Time Selection */}
               {selectedDate && (
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-700">Vaqt</label>
+                  <label className="block text-sm font-semibold mb-2 text-gray-700">Time</label>
                   <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1">
                     {timeSlots.map((slot) => (
                       <button
@@ -317,7 +317,7 @@ export default function BarbershopDetailPage() {
                 disabled={!selectedService || !selectedDate || !selectedTime}
                 className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg"
               >
-                Savatga qo'shish
+                Add to Cart
               </button>
             </motion.div>
           </div>

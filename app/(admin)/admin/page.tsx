@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
       );
 
       if (!validAdmin) {
-        toast.error('Email yoki parol noto\'g\'ri. Faqat adminlar kirishi mumkin.');
+        toast.error('Invalid email or password. Only admins can login.');
         setLoading(false);
         return;
       }
@@ -74,7 +74,7 @@ export default function AdminLoginPage() {
       // Save admin session (separate from regular user auth)
       localStorage.setItem('admin-session', JSON.stringify(adminSession));
       
-      toast.success('Admin panelga muvaffaqiyatli kirildi!', {
+      toast.success('Successfully logged into admin panel!', {
         icon: '🎉',
         duration: 2000,
       });
@@ -86,7 +86,7 @@ export default function AdminLoginPage() {
       }, 500);
     } catch (error) {
       console.error('Admin login error:', error);
-      toast.error('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.');
+      toast.error('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -113,8 +113,8 @@ export default function AdminLoginPage() {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 bg-clip-text text-transparent mb-2">
               Admin Panel
             </h1>
-            <p className="text-gray-600">Admin tizimiga kirish</p>
-            <p className="text-xs text-gray-500 mt-1">Faqat adminlar uchun</p>
+            <p className="text-gray-600">Admin Login</p>
+            <p className="text-xs text-gray-500 mt-1">For admins only</p>
           </div>
 
           {/* Login Form */}
@@ -138,7 +138,7 @@ export default function AdminLoginPage() {
 
             <div>
               <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Parol
+                Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -148,7 +148,7 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-10 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  placeholder="Parolingizni kiriting"
+                  placeholder="Enter your password"
                 />
                 <button
                   type="button"
@@ -169,7 +169,7 @@ export default function AdminLoginPage() {
               disabled={loading}
               className="w-full py-3 bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white rounded-xl font-semibold hover:from-red-700 hover:via-orange-700 hover:to-amber-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Kirilmoqda...' : 'Admin sifatida kirish'}
+              {loading ? 'Logging in...' : 'Login as Admin'}
             </button>
           </form>
 

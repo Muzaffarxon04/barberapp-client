@@ -40,21 +40,21 @@ export default function Header() {
                 href="/"
                 className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors relative group"
               >
-                Bosh sahifa
+                Home
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
               </Link>
               <Link
                 href="/search"
                 className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors relative group"
               >
-                Qidirish
+                Search
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
               </Link>
               <Link
                 href="/cart"
                 className="relative text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors group"
               >
-                Savat
+                Cart
                 {items.length > 0 && (
                   <motion.span
                     initial={{ scale: 0 }}
@@ -94,7 +94,7 @@ export default function Header() {
                     onClick={logout}
                     className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors"
                   >
-                    Chiqish
+                    Logout
                   </button>
                 </div>
               ) : (
@@ -102,7 +102,7 @@ export default function Header() {
                   onClick={() => setIsAuthModalOpen(true)}
                   className="px-6 py-2 text-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
                 >
-                  Kirish
+                  Login
                 </button>
               )}
 
@@ -129,14 +129,14 @@ export default function Header() {
                   onClick={() => setIsMenuOpen(false)}
                   className="text-sm font-medium hover:text-accent transition-colors"
                 >
-                  Bosh sahifa
+                  Home
                 </Link>
                 <Link
                   href="/search"
                   onClick={() => setIsMenuOpen(false)}
                   className="text-sm font-medium hover:text-accent transition-colors"
                 >
-                  Qidirish
+                  Search
                 </Link>
               </nav>
             </motion.div>

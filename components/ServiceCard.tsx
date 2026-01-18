@@ -25,7 +25,7 @@ export default function ServiceCard({ service, selected, onSelect }: ServiceCard
       <div className="flex items-start justify-between mb-3">
         <h4 className="font-bold text-gray-800 text-lg">{service.name}</h4>
         <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          {service.price.toLocaleString()} so'm
+          ${service.price.toLocaleString()}
         </span>
       </div>
       

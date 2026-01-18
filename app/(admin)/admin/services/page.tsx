@@ -34,9 +34,9 @@ export default function AdminServicesPage() {
         category: data.category || 'haircut',
       };
       setServices([...services, newService]);
-      toast.success('Xizmat qo\'shildi');
+      toast.success('Service added');
     } catch (error) {
-      toast.error('Xatolik yuz berdi');
+      toast.error('An error occurred');
       throw error;
     }
   };
@@ -52,9 +52,9 @@ export default function AdminServicesPage() {
           s.id === selectedService.id ? { ...s, ...data } : s
         )
       );
-      toast.success('Xizmat yangilandi');
+      toast.success('Service updated');
     } catch (error) {
-      toast.error('Xatolik yuz berdi');
+      toast.error('An error occurred');
       throw error;
     }
   };
@@ -66,11 +66,11 @@ export default function AdminServicesPage() {
       // TODO: Replace with actual API call
       // await api.admin.services.delete(selectedService.id);
       setServices(services.filter((s) => s.id !== selectedService.id));
-      toast.success('Xizmat o\'chirildi');
+      toast.success('Service deleted');
       setIsDeleteModalOpen(false);
       setSelectedService(null);
     } catch (error) {
-      toast.error('Xatolik yuz berdi');
+      toast.error('An error occurred');
     }
   };
 
@@ -89,15 +89,15 @@ export default function AdminServicesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Xizmatlar</h1>
-          <p className="text-gray-600">Barcha xizmatlarni boshqarish</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Services</h1>
+          <p className="text-gray-600">Manage all services</p>
         </div>
         <button
           onClick={() => setIsCreateModalOpen(true)}
           className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
         >
           <Plus className="h-5 w-5" />
-          Yangi xizmat
+          New Service
         </button>
       </div>
 
@@ -105,7 +105,7 @@ export default function AdminServicesPage() {
       <div className="bg-white rounded-xl p-4 border border-gray-200">
         <input
           type="text"
-          placeholder="Xizmat qidirish..."
+          placeholder="Search services..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white"
@@ -119,19 +119,19 @@ export default function AdminServicesPage() {
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                  Xizmat nomi
+                  Service Name
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                  Kategoriya
+                  Category
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                  Narx
+                  Price
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                  Davomiyligi
+                  Duration
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                  Harakatlar
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -155,7 +155,7 @@ export default function AdminServicesPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-1 text-gray-900 font-medium">
                       <DollarSign className="h-4 w-4 text-amber-500" />
-                      {service.price.toLocaleString()} so'm
+                      ${service.price.toLocaleString()}
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -189,7 +189,7 @@ export default function AdminServicesPage() {
 
       {filteredServices.length === 0 && (
         <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
-          <p className="text-gray-600">Hech narsa topilmadi</p>
+          <p className="text-gray-600">Nothing found</p>
         </div>
       )}
 
@@ -219,10 +219,10 @@ export default function AdminServicesPage() {
           setSelectedService(null);
         }}
         onConfirm={handleDelete}
-        title="Xizmatni o'chirish"
-        message={`"${selectedService?.name}" xizmatini o'chirishni xohlaysizmi? Bu amalni qaytarib bo'lmaydi.`}
-        confirmText="O'chirish"
-        cancelText="Bekor qilish"
+        title="Delete Service"
+        message={`Are you sure you want to delete "${selectedService?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
         variant="danger"
       />
     </div>

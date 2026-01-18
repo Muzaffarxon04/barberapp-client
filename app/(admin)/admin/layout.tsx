@@ -61,7 +61,7 @@ export default function AdminLayout({
     // Check admin session and handle redirects if needed
     const session = localStorage.getItem('admin-session');
     if (!session || !adminSession) {
-      toast.error('Admin huquqi kerak');
+      toast.error('Admin access required');
       router.push('/admin');
       return;
     }
@@ -70,13 +70,13 @@ export default function AdminLayout({
       const parsed: AdminSession = JSON.parse(session);
       if (parsed.role !== 'admin' || !parsed.token) {
         localStorage.removeItem('admin-session');
-        toast.error('Admin huquqi kerak');
+        toast.error('Admin access required');
         router.push('/admin');
         return;
       }
     } catch {
       localStorage.removeItem('admin-session');
-      toast.error('Admin huquqi kerak');
+      toast.error('Admin access required');
       router.push('/admin');
     }
   }, [router, pathname, adminSession]);
@@ -92,16 +92,16 @@ export default function AdminLayout({
 
   const handleLogoutConfirm = () => {
     localStorage.removeItem('admin-session');
-    toast.success('Admin paneldan chiqdingiz');
+    toast.success('Logged out from admin panel');
     router.push('/admin');
     router.refresh();
   };
 
   const menuItems = [
     { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-    { href: '/admin/barbershops', icon: Store, label: 'Barbershoplar' },
-    { href: '/admin/services', icon: Scissors, label: 'Xizmatlar' },
-    { href: '/admin/bookings', icon: Calendar, label: 'Bronlar' },
+    { href: '/admin/barbershops', icon: Store, label: 'Barbershops' },
+    { href: '/admin/services', icon: Scissors, label: 'Services' },
+    { href: '/admin/bookings', icon: Calendar, label: 'Bookings' },
   ];
   
   // Check if active route matches or starts with menu item href
@@ -193,7 +193,7 @@ export default function AdminLayout({
                     className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2"
                   >
                     <LogOut className="h-4 w-4" />
-                    <span className="hidden sm:inline">Chiqish</span>
+                    <span className="hidden sm:inline">Logout</span>
                   </button>
                 </div>
               )}
@@ -221,10 +221,10 @@ export default function AdminLayout({
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={handleLogoutConfirm}
-        title="Chiqish"
-        message="Haqiqatdan ham akkauntdan chiqmoqchimisiz?"
-        confirmText="Ha, chiqish"
-        cancelText="Bekor qilish"
+        title="Logout"
+        message="Are you sure you want to logout from your account?"
+        confirmText="Yes, Logout"
+        cancelText="Cancel"
         variant="warning"
       />
     </div>

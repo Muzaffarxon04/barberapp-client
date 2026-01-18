@@ -20,8 +20,8 @@ export default function ConfirmModal({
   onConfirm,
   title,
   message,
-  confirmText = 'Tasdiqlash',
-  cancelText = 'Bekor qilish',
+  confirmText = 'Confirm',
+  cancelText = 'Cancel',
   variant = 'danger',
 }: ConfirmModalProps) {
   const handleConfirm = () => {

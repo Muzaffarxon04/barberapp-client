@@ -36,7 +36,7 @@ export default function BarbershopCard({ barbershop, index = 0 }: BarbershopCard
             <div className="absolute top-4 right-4">
               <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
                 <Scissors className="h-4 w-4 text-white" />
-                <span className="text-sm font-bold text-white">{barbershop.services.length} xizmat</span>
+                <span className="text-sm font-bold text-white">{barbershop.services.length} services</span>
               </div>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-5">
@@ -58,13 +58,13 @@ export default function BarbershopCard({ barbershop, index = 0 }: BarbershopCard
             <div className="flex items-center justify-between pt-4 border-t border-gray-100">
               <div className="flex items-center gap-1 text-sm text-gray-500">
                 <Clock className="h-4 w-4 text-amber-500" />
-                <span>Bugun: {barbershop.workingHours.monday.open} - {barbershop.workingHours.monday.close}</span>
+                <span>Today: {barbershop.workingHours.monday.open} - {barbershop.workingHours.monday.close}</span>
               </div>
               <motion.span
                 whileHover={{ scale: 1.05 }}
                 className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent group-hover:underline flex items-center gap-1"
               >
-                Batafsil
+                Details
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </motion.span>
             </div>
