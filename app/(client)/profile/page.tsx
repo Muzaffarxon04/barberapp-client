@@ -1,16 +1,19 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { useAuthStore } from '@/lib/stores/authStore';
 import { useBookingStore } from '@/lib/stores/bookingStore';
-import { BookingStatus } from '@/types';
+import { Booking, BookingStatus } from '@/types';
+import BookingModal from '@/components/BookingModal';
 
 export default function ProfilePage() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuthStore();
   const { bookings } = useBookingStore();
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -82,7 +85,11 @@ export default function ProfilePage() {
               {sortedBookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="border border-gray-200 p-4"
+                  onClick={() => {
+                    setSelectedBooking(booking);
+                    setIsModalOpen(true);
+                  }}
+                  className="border border-gray-200 p-4 cursor-pointer hover:border-gray-300 hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div>
@@ -128,6 +135,15 @@ export default function ProfilePage() {
           )}
         </div>
       </div>
+
+      <BookingModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedBooking(null);
+        }}
+        booking={selectedBooking}
+      />
     </div>
   );
 }

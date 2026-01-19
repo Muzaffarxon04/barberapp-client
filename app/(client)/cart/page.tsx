@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useCartStore } from '@/lib/stores/cartStore';
 import { useAuthStore } from '@/lib/stores/authStore';
@@ -18,6 +18,7 @@ export default function CartPage() {
   const { addBooking } = useBookingStore();
   const router = useRouter();
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const bookingIdCounter = useRef(0);
 
   const handleCheckout = async () => {
     if (!isAuthenticated) {
@@ -38,10 +39,14 @@ export default function CartPage() {
       // TODO: Replace with actual API call
       // await api.bookings.createMultiple(items);
       
-      // Create bookings from cart items
+      // Create bookings from cart items BEFORE clearing cart
+      const currentTime = new Date().toISOString();
+      const bookingsToAdd: Booking[] = [];
+      
       items.forEach((item) => {
+        bookingIdCounter.current += 1;
         const booking: Booking = {
-          id: `booking-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          id: `booking-${currentTime}-${bookingIdCounter.current}`,
           barbershopId: item.barbershopId,
           barbershopName: item.barbershopName,
           barberId: item.barberId,
@@ -53,8 +58,13 @@ export default function CartPage() {
           price: item.price,
           duration: item.duration,
           status: 'confirmed',
-          createdAt: new Date().toISOString(),
+          createdAt: currentTime,
         };
+        bookingsToAdd.push(booking);
+      });
+      
+      // Add all bookings to store
+      bookingsToAdd.forEach((booking) => {
         addBooking(booking);
       });
       
@@ -62,6 +72,8 @@ export default function CartPage() {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       toast.dismiss(loadingToast);
+      
+      // Clear cart AFTER bookings are saved
       clearCart();
       
       // Open success modal
