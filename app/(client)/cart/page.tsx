@@ -1,17 +1,23 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useCartStore } from '@/lib/stores/cartStore';
 import { useAuthStore } from '@/lib/stores/authStore';
+import { useBookingStore } from '@/lib/stores/bookingStore';
 import { Trash2, Calendar, Clock, MapPin, Scissors, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
+import { Booking } from '@/types';
+import SuccessModal from '@/components/SuccessModal';
 
 export default function CartPage() {
   const { items, removeFromCart, clearCart, getTotalPrice, getTotalDuration } = useCartStore();
   const { isAuthenticated } = useAuthStore();
+  const { addBooking } = useBookingStore();
   const router = useRouter();
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const handleCheckout = async () => {
     if (!isAuthenticated) {
@@ -32,19 +38,36 @@ export default function CartPage() {
       // TODO: Replace with actual API call
       // await api.bookings.createMultiple(items);
       
+      // Create bookings from cart items
+      items.forEach((item) => {
+        const booking: Booking = {
+          id: `booking-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          barbershopId: item.barbershopId,
+          barbershopName: item.barbershopName,
+          barberId: item.barberId,
+          barberName: item.barberName,
+          serviceId: item.serviceId,
+          serviceName: item.serviceName,
+          date: item.date,
+          time: item.time,
+          price: item.price,
+          duration: item.duration,
+          status: 'confirmed',
+          createdAt: new Date().toISOString(),
+        };
+        addBooking(booking);
+      });
+      
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       toast.dismiss(loadingToast);
-      toast.success('Booking completed successfully!', {
-        icon: '🎉',
-        duration: 4000,
-      });
       clearCart();
       
+      // Open success modal
       setTimeout(() => {
-        router.push('/');
-      }, 1500);
+        setIsSuccessModalOpen(true);
+      }, 100);
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error('An error occurred. Please try again.');
@@ -60,8 +83,7 @@ export default function CartPage() {
           className="text-center max-w-md"
         >
           <div className="relative mb-6">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-2xl opacity-20" />
-            <Scissors className="h-20 w-20 text-gray-400 mx-auto relative z-10" />
+            <Scissors className="h-20 w-20 text-gray-400 mx-auto" />
           </div>
           <h2 className="text-3xl font-bold mb-3 text-gray-900">Cart is Empty</h2>
           <p className="text-gray-700 mb-8 text-lg leading-relaxed">
@@ -69,7 +91,7 @@ export default function CartPage() {
           </p>
           <button
             onClick={() => router.push('/')}
-            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
+            className="px-8 py-4 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
           >
             View Barbershops
           </button>
@@ -134,7 +156,7 @@ export default function CartPage() {
                     >
                       <Trash2 className="h-5 w-5 text-red-500" />
                     </button>
-                    <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    <div className="text-xl font-bold text-gray-900">
                       ${item.price.toLocaleString()}
                     </div>
                   </div>
@@ -161,7 +183,7 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between text-2xl font-bold pt-4 border-t border-gray-200">
                 <span className="text-gray-800">Total:</span>
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <span className="text-gray-900">
                   ${getTotalPrice().toLocaleString()}
                 </span>
               </div>
@@ -179,7 +201,7 @@ export default function CartPage() {
               </button>
               <button
                 onClick={handleCheckout}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
+                className="flex-1 px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
               >
                 Book Now
               </button>
@@ -187,6 +209,15 @@ export default function CartPage() {
           </motion.div>
         </motion.div>
       </div>
+
+      <SuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        onViewAppointments={() => {
+          setIsSuccessModalOpen(false);
+          router.push('/profile');
+        }}
+      />
     </div>
   );
 }

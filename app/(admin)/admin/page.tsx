@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Scissors, Lock, Mail, Eye, EyeOff, Shield } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface AdminSession {
@@ -30,7 +29,7 @@ export default function AdminLoginPage() {
         if (session.role === 'admin' && session.token) {
           router.push('/admin/dashboard');
         }
-      } catch (error) {
+      } catch {
         // Invalid session, clear it
         localStorage.removeItem('admin-session');
       }
@@ -93,72 +92,53 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-amber-50 flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md"
-      >
-        <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 p-8">
-          {/* Logo */}
-          <div className="text-center mb-8">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring' }}
-              className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 mb-4 shadow-lg"
-            >
-              <Shield className="h-8 w-8 text-white" />
-            </motion.div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 bg-clip-text text-transparent mb-2">
-              Admin Panel
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="w-full max-w-sm">
+        <div className="p-8">
+          <div className="mb-8">
+            <h1 className="text-2xl font-medium text-gray-900 mb-1">
+              Admin Login
             </h1>
-            <p className="text-gray-600">Admin Login</p>
-            <p className="text-xs text-gray-500 mt-1">For admins only</p>
+            <p className="text-sm text-gray-500">Enter your credentials</p>
           </div>
 
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold mb-2 text-gray-700">
+              <label className="block text-sm text-gray-700 mb-1">
                 Email
               </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  placeholder="admin@barbershop.uz"
-                />
-              </div>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:border-gray-900 text-gray-900"
+                placeholder="admin@barbershop.uz"
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold mb-2 text-gray-700">
+              <label className="block text-sm text-gray-700 mb-1">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                  placeholder="Enter your password"
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 focus:outline-none focus:border-gray-900 text-gray-900"
+                  placeholder="Enter password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1"
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
+                    <EyeOff className="h-4 w-4 text-gray-400" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
+                    <Eye className="h-4 w-4 text-gray-400" />
                   )}
                 </button>
               </div>
@@ -167,23 +147,19 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white rounded-xl font-semibold hover:from-red-700 hover:via-orange-700 hover:to-amber-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-2 bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Logging in...' : 'Login as Admin'}
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
 
-          {/* Info */}
-          <div className="mt-6 p-4 bg-orange-50 rounded-xl border border-orange-200">
-            <p className="text-sm text-orange-700 text-center">
-              <Shield className="h-4 w-4 inline mr-1" />
-              Demo admin: <span className="font-semibold">admin@barbershop.uz</span> / <span className="font-semibold">admin123</span>
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <p className="text-xs text-gray-500 text-center">
+              Demo: admin@barbershop.uz / admin123
             </p>
           </div>
-
-         
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

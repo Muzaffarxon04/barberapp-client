@@ -26,10 +26,9 @@ export default function Header() {
                 transition={{ type: 'spring', stiffness: 300 }}
                 className="relative"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg blur-sm opacity-50 group-hover:opacity-75 transition-opacity" />
-                <Scissors className="h-6 w-6 text-blue-600 relative z-10" />
+                <Scissors className="h-6 w-6 text-gray-900" />
               </motion.div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="text-xl font-bold text-gray-900">
                 Barbershop
               </span>
             </Link>
@@ -59,7 +58,7 @@ export default function Header() {
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-xs font-bold text-white shadow-lg"
+                    className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-xs font-bold text-white"
                   >
                     {items.length}
                   </motion.span>
@@ -84,12 +83,21 @@ export default function Header() {
 
               {isAuthenticated ? (
                 <div className="flex items-center gap-3">
-                  <div className="hidden md:flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center shadow-md">
+                  <Link
+                    href="/profile"
+                    className="hidden md:flex items-center gap-2 hover:opacity-80 transition-opacity"
+                  >
+                    <div className="h-8 w-8 rounded-full bg-gray-900 flex items-center justify-center">
                       <User className="h-4 w-4 text-white" />
                     </div>
                     <span className="text-sm font-medium text-gray-700">{user?.name}</span>
-                  </div>
+                  </Link>
+                  <Link
+                    href="/profile"
+                    className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <User className="h-5 w-5 text-gray-700" />
+                  </Link>
                   <button
                     onClick={logout}
                     className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors"
@@ -100,7 +108,7 @@ export default function Header() {
               ) : (
                 <button
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="px-6 py-2 text-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
+                  className="px-6 py-2 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   Login
                 </button>
@@ -137,6 +145,13 @@ export default function Header() {
                   className="text-sm font-medium hover:text-accent transition-colors"
                 >
                   Search
+                </Link>
+                <Link
+                  href="/profile"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-sm font-medium hover:text-accent transition-colors"
+                >
+                  Profile
                 </Link>
               </nav>
             </motion.div>

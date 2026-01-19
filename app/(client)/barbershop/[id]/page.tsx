@@ -1,16 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { MapPin, Clock, Phone, Calendar, User, Scissors } from 'lucide-react';
+import { MapPin, Clock, Phone, User, Scissors } from 'lucide-react';
 import { mockBarbershops } from '@/lib/data';
 import ServiceCard from '@/components/ServiceCard';
 import BarberCard from '@/components/BarberCard';
 import { useCartStore } from '@/lib/stores/cartStore';
 import { useAuthStore } from '@/lib/stores/authStore';
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import toast from 'react-hot-toast';
 
 export default function BarbershopDetailPage() {
@@ -22,8 +22,21 @@ export default function BarbershopDetailPage() {
   const [selectedBarber, setSelectedBarber] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
+  const cartIdCounter = useRef(0);
 
   const barbershop = mockBarbershops.find((bs) => bs.id === params.id);
+
+  // Generate time slots (mock) - using lazy initialization to avoid calling Math.random during render
+  const timeSlots = useState(() => {
+    const slots = [];
+    for (let hour = 9; hour < 21; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        slots.push({ time, available: Math.random() > 0.3 }); // 70% available
+      }
+    }
+    return slots;
+  })[0];
 
   if (!barbershop) {
     return (
@@ -33,19 +46,24 @@ export default function BarbershopDetailPage() {
     );
   }
 
-  // Generate time slots (mock)
-  const generateTimeSlots = () => {
-    const slots = [];
-    for (let hour = 9; hour < 21; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
-        const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-        slots.push({ time, available: Math.random() > 0.3 }); // 70% available
-      }
+  // Generate date options (next 14 days)
+  const generateDateOptions = () => {
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dates = [];
+    const today = new Date();
+    for (let i = 0; i < 14; i++) {
+      const date = addDays(today, i);
+      const dayIndex = date.getDay();
+      dates.push({
+        date: format(date, 'yyyy-MM-dd'),
+        displayDate: format(date, 'dd.MM.yyyy'),
+        dayName: dayNames[dayIndex],
+      });
     }
-    return slots;
+    return dates;
   };
 
-  const timeSlots = generateTimeSlots();
+  const dateOptions = generateDateOptions();
 
   // Filter barbers by selected service
   const availableBarbers = selectedService
@@ -86,8 +104,9 @@ export default function BarbershopDetailPage() {
       ? barbershop.barbers.find((b) => b.id === selectedBarber)
       : null;
 
+    cartIdCounter.current += 1;
     addToCart({
-      id: `${Date.now()}`,
+      id: `cart-${barbershop.id}-${selectedService}-${cartIdCounter.current}`,
       barbershopId: barbershop.id,
       barbershopName: barbershop.name,
       barbershopImage: barbershop.image,
@@ -121,8 +140,7 @@ export default function BarbershopDetailPage() {
           priority
           unoptimized={barbershop.image.startsWith('http')}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent_50%)]" />
+        <div className="absolute inset-0 bg-black/50" />
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -225,7 +243,7 @@ export default function BarbershopDetailPage() {
                       key={barber.id}
                       className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
                     >
-                      <div className="h-12 w-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center shadow-md">
+                      <div className="h-12 w-12 rounded-full bg-gray-900 flex items-center justify-center">
                         <User className="h-6 w-6 text-white" />
                       </div>
                       <div>
@@ -250,14 +268,23 @@ export default function BarbershopDetailPage() {
 
               {/* Date Selection */}
               <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-700">Date</label>
-                <input
-                  type="date"
-                  min={format(new Date(), 'yyyy-MM-dd')}
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                />
+                <label className="block text-sm font-medium mb-3 text-gray-900">Date of admission</label>
+                <div className="grid grid-cols-4 gap-2">
+                  {dateOptions.map((option) => (
+                    <button
+                      key={option.date}
+                      onClick={() => setSelectedDate(option.date)}
+                      className={`p-2 text-left border-2 rounded-lg transition-all ${
+                        selectedDate === option.date
+                          ? 'border-blue-600 bg-white'
+                          : 'border-gray-200 hover:border-gray-300 bg-white'
+                      }`}
+                    >
+                      <div className="text-xs text-gray-900 mb-1">{option.displayDate}</div>
+                      <div className="text-xs text-gray-600">{option.dayName}</div>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Time Selection */}
@@ -272,9 +299,9 @@ export default function BarbershopDetailPage() {
                         disabled={!slot.available}
                         className={`px-3 py-2 text-sm font-medium border-2 rounded-lg transition-all ${
                           selectedTime === slot.time
-                            ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white border-transparent shadow-md'
+                            ? 'bg-gray-900 text-white border-gray-900'
                             : slot.available
-                            ? 'border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700'
+                            ? 'border-gray-200 hover:border-gray-400 hover:bg-gray-50 text-gray-700'
                             : 'border-gray-200 opacity-40 cursor-not-allowed text-gray-400'
                         }`}
                       >
@@ -315,7 +342,7 @@ export default function BarbershopDetailPage() {
               <button
                 onClick={handleAddToCart}
                 disabled={!selectedService || !selectedDate || !selectedTime}
-                className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg"
+                className="w-full py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Add to Cart
               </button>

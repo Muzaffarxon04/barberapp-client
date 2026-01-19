@@ -66,7 +66,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-8 shadow-2xl border border-gray-100"
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h2 className="text-3xl font-bold text-gray-900">
                 {isLogin ? 'Login' : 'Register'}
               </h2>
               <button
@@ -133,7 +133,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                className="w-full py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
               >
                 {loading ? 'Loading...' : isLogin ? 'Login' : 'Register'}
               </button>

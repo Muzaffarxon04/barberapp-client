@@ -102,7 +102,7 @@ export default function AdminBarbershopsPage() {
         </div>
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+          className="px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center gap-2"
         >
           <Plus className="h-5 w-5" />
           New Barbershop

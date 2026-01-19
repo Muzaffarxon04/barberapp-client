@@ -18,13 +18,13 @@ export default function ServiceCard({ service, selected, onSelect }: ServiceCard
       onClick={onSelect}
       className={`p-5 border-2 rounded-xl cursor-pointer transition-all ${
         selected
-          ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 shadow-lg'
+          ? 'border-gray-900 bg-gray-50'
           : 'border-gray-200 bg-white hover:border-blue-300 hover:shadow-md'
       }`}
     >
       <div className="flex items-start justify-between mb-3">
         <h4 className="font-bold text-gray-800 text-lg">{service.name}</h4>
-        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <span className="text-xl font-bold text-gray-900">
           ${service.price.toLocaleString()}
         </span>
       </div>

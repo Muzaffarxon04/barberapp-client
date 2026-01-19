@@ -125,10 +125,10 @@ export default function AdminLayout({
           {/* Logo */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <Link href="/admin/dashboard" className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-lg bg-gray-900 flex items-center justify-center">
                 <Scissors className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="text-xl font-bold text-gray-900">
                 Admin Panel
               </span>
             </Link>
@@ -152,7 +152,7 @@ export default function AdminLayout({
                   onClick={() => setSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border border-blue-200'
+                      ? 'bg-gray-50 text-gray-900 border border-gray-300'
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
@@ -181,7 +181,7 @@ export default function AdminLayout({
             <div className="flex items-center gap-4 ml-auto">
               {adminSession && (
                 <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-red-600 to-orange-600 flex items-center justify-center">
+                  <div className="h-8 w-8 rounded-full bg-gray-900 flex items-center justify-center">
                     <Shield className="h-4 w-4 text-white" />
                   </div>
                   <div className="hidden md:block text-right">

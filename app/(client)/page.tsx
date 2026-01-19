@@ -96,9 +96,8 @@ export default function Home() {
             unoptimized
           />
         </div>
-        {/* Overlay - yengil gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/40 via-purple-600/35 to-amber-500/40" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.05),transparent_50%)]" />
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gray-50/50" />
         <div className="container mx-auto relative z-10 overflow-visible">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -171,7 +170,7 @@ export default function Home() {
                         onMouseEnter={() => setFocusedIndex(index)}
                         className={`p-3 cursor-pointer transition-all border-b border-gray-100 last:border-b-0 ${
                           focusedIndex === index
-                            ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200'
+                            ? 'bg-gray-50 border-gray-300'
                             : 'bg-white hover:bg-gray-50'
                         }`}
                       >
@@ -231,7 +230,7 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-b from-white to-gray-50">
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div
@@ -240,7 +239,7 @@ export default function Home() {
               viewport={{ once: true }}
               className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
             >
-              <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              <div className="text-5xl font-bold text-gray-900 mb-2">
                 {mockBarbershops.length}+
               </div>
               <div className="text-gray-600 font-medium">Barbershops</div>
@@ -252,7 +251,7 @@ export default function Home() {
               transition={{ delay: 0.1 }}
               className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
             >
-              <div className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">1000+</div>
+              <div className="text-5xl font-bold text-gray-900 mb-2">1000+</div>
               <div className="text-gray-600 font-medium">Happy Customers</div>
             </motion.div>
             <motion.div
@@ -262,7 +261,7 @@ export default function Home() {
               transition={{ delay: 0.2 }}
               className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
             >
-              <div className="text-5xl font-bold bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent mb-2">24/7</div>
+              <div className="text-5xl font-bold text-gray-900 mb-2">24/7</div>
               <div className="text-gray-600 font-medium">Online Booking</div>
             </motion.div>
           </div>

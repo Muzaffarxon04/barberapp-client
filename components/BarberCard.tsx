@@ -21,15 +21,15 @@ export default function BarberCard({ barber, selected, onSelect, disabled }: Bar
         disabled
           ? 'opacity-50 cursor-not-allowed border-gray-200'
           : selected
-          ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 shadow-lg'
+          ? 'border-gray-900 bg-gray-50'
           : 'border-gray-200 bg-white hover:border-blue-300 hover:shadow-md'
       }`}
     >
       <div className="flex items-center gap-4">
-        <div className={`h-16 w-16 rounded-full flex items-center justify-center shadow-md ${
+        <div className={`h-16 w-16 rounded-full flex items-center justify-center ${
           selected
-            ? 'bg-gradient-to-r from-blue-500 to-purple-500'
-            : 'bg-gradient-to-r from-gray-400 to-gray-500'
+            ? 'bg-gray-900'
+            : 'bg-gray-400'
         }`}>
           <User className="h-8 w-8 text-white" />
         </div>
@@ -45,7 +45,7 @@ export default function BarberCard({ barber, selected, onSelect, disabled }: Bar
           )}
         </div>
         {selected && (
-          <div className="h-6 w-6 rounded-full bg-blue-500 flex items-center justify-center">
+          <div className="h-6 w-6 rounded-full bg-gray-900 flex items-center justify-center">
             <div className="h-3 w-3 rounded-full bg-white" />
           </div>
         )}

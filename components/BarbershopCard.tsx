@@ -32,7 +32,7 @@ export default function BarbershopCard({ barbershop, index = 0 }: BarbershopCard
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               unoptimized={barbershop.image.startsWith('http')}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+            <div className="absolute inset-0 bg-black/50" />
             <div className="absolute top-4 right-4">
               <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
                 <Scissors className="h-4 w-4 text-white" />
@@ -62,7 +62,7 @@ export default function BarbershopCard({ barbershop, index = 0 }: BarbershopCard
               </div>
               <motion.span
                 whileHover={{ scale: 1.05 }}
-                className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent group-hover:underline flex items-center gap-1"
+                className="text-sm font-semibold text-gray-900 group-hover:underline flex items-center gap-1"
               >
                 Details
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
