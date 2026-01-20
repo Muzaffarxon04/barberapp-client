@@ -176,57 +176,40 @@ export default function BarbershopDetailPage() {
               <p className="text-gray-600 leading-relaxed">{barbershop.description}</p>
             </motion.section>
 
-            {/* Services */}
+            {/* Services Price List */}
             <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
               className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm"
             >
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">Services</h2>
-              <div className="space-y-3">
-                {barbershop.services.map((service) => (
-                  <ServiceCard
-                    key={service.id}
-                    service={service}
-                    selected={selectedService === service.id}
-                    onSelect={() => handleServiceSelect(service.id)}
-                  />
-                ))}
+              <h2 className="text-2xl font-bold mb-4 text-gray-800">Services Price List</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Service</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Duration</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-gray-900">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {barbershop.services.map((service) => (
+                      <tr
+                        key={service.id}
+                        className={`border-b border-gray-100 bg-white`}
+                      >
+                        <td className="py-3 px-4 text-sm text-gray-900">{service.name}</td>
+                        <td className="py-3 px-4 text-sm text-gray-600">{service.duration} min</td>
+                        <td className="py-3 px-4 text-sm text-gray-900 text-right font-medium">
+                          {service.price.toLocaleString()} UZS
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </motion.section>
-
-            {/* Barbers Selection */}
-            {selectedService && availableBarbers.length > 0 && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm"
-              >
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">Select Barber</h2>
-                <p className="text-sm text-gray-600 mb-4">
-                  {selectedService
-                    ? 'The following barbers can perform the selected service'
-                    : 'Please select a service first'}
-                </p>
-                <div className="space-y-3">
-                  {availableBarbers.map((barber) => (
-                    <BarberCard
-                      key={barber.id}
-                      barber={barber}
-                      selected={selectedBarber === barber.id}
-                      onSelect={() => setSelectedBarber(barber.id)}
-                    />
-                  ))}
-                </div>
-                {availableBarbers.length === 0 && (
-                  <p className="text-gray-600 text-center py-4">
-                    No barbers available for this service
-                  </p>
-                )}
-              </motion.section>
-            )}
 
             {/* All Barbers Info */}
             {barbershop.barbers.length > 0 && (
@@ -264,7 +247,39 @@ export default function BarbershopDetailPage() {
               animate={{ opacity: 1, x: 0 }}
               className="sticky top-24 bg-white border border-gray-200 rounded-2xl p-6 space-y-6 shadow-lg"
             >
-              <h3 className="text-xl font-bold text-gray-800">Book Appointment</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">Book Appointment</h3>
+
+              {/* Services Selection */}
+              <div>
+                <label className="block text-sm font-medium mb-3 text-gray-900">Services</label>
+                <div className="space-y-2">
+                  {barbershop.services.map((service) => (
+                    <ServiceCard
+                      key={service.id}
+                      service={service}
+                      selected={selectedService === service.id}
+                      onSelect={() => handleServiceSelect(service.id)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Barbers Selection */}
+              {selectedService && availableBarbers.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium mb-3 text-gray-900">Select Barber</label>
+                  <div className="space-y-2">
+                    {availableBarbers.map((barber) => (
+                      <BarberCard
+                        key={barber.id}
+                        barber={barber}
+                        selected={selectedBarber === barber.id}
+                        onSelect={() => setSelectedBarber(barber.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Date Selection */}
               <div>
@@ -325,18 +340,6 @@ export default function BarbershopDetailPage() {
                   </span>
                 </div>
               </div>
-
-              {/* Selected Barber Info */}
-              {selectedBarber && (
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                  <div className="flex items-center gap-2 text-sm text-blue-800">
-                    <User className="h-4 w-4" />
-                    <span className="font-semibold">
-                      {barbershop.barbers.find((b) => b.id === selectedBarber)?.name}
-                    </span>
-                  </div>
-                </div>
-              )}
 
               {/* Add to Cart Button */}
               <button

@@ -25,23 +25,16 @@ export default function ServiceCard({ service, selected, onSelect }: ServiceCard
       <div className="flex items-start justify-between mb-3">
         <h4 className="font-bold text-gray-800 text-lg">{service.name}</h4>
         <span className="text-xl font-bold text-gray-900">
-          ${service.price.toLocaleString()}
+          {service.price.toLocaleString()} UZS
         </span>
       </div>
-      
-      {service.description && (
-        <p className="text-sm text-gray-600 mb-4 leading-relaxed">{service.description}</p>
-      )}
 
       <div className="flex items-center gap-4 text-sm text-gray-500">
         <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-lg">
           <Clock className="h-4 w-4 text-blue-500" />
           <span className="font-medium">{service.duration} min</span>
         </div>
-        <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-lg">
-          <DollarSign className="h-4 w-4 text-amber-500" />
-          <span className="font-medium capitalize">{service.category}</span>
-        </div>
+       
       </div>
     </motion.div>
   );
