@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Upload, Image as ImageIcon, Trash2 } from 'lucide-react';
+import Image from 'next/image';
 import { Barbershop } from '@/types';
 import { cities, districts } from '@/lib/data';
 
@@ -29,7 +30,10 @@ export default function BarbershopModal({
     district: '',
     phone: '',
     email: '',
+    image: '',
   });
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -42,7 +46,10 @@ export default function BarbershopModal({
         district: barbershop.district || '',
         phone: barbershop.phone || '',
         email: barbershop.email || '',
+        image: barbershop.image || '',
       });
+      setImagePreview(barbershop.image || null);
+      setImageFile(null);
     } else {
       setFormData({
         name: '',
@@ -52,15 +59,53 @@ export default function BarbershopModal({
         district: '',
         phone: '',
         email: '',
+        image: '',
       });
+      setImagePreview(null);
+      setImageFile(null);
     }
   }, [mode, barbershop, isOpen]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.type.startsWith('image/')) {
+        setImageFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('Please select an image file');
+      }
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    setFormData({ ...formData, image: '' });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      // If new image file is selected, convert to base64 or upload
+      if (imageFile) {
+        // For now, we'll use base64. In production, upload to server and get URL
+        const reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+        reader.onloadend = async () => {
+          const base64Image = reader.result as string;
+          await onSave({ ...formData, image: base64Image });
+          onClose();
+        };
+        return;
+      }
+      
       await onSave(formData);
       onClose();
     } catch (error) {
@@ -85,7 +130,7 @@ export default function BarbershopModal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed left-1/2 top-1/2 z-50 w-full max-w-2xl max-h-[90vh] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white shadow-2xl border border-gray-100 overflow-hidden"
+            className="fixed left-1/2 top-1/2 z-50 w-full max-w-2xl max-h-[90vh] -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-200 overflow-hidden"
           >
             <div className="flex flex-col h-full max-h-[90vh]">
               {/* Header */}
@@ -104,6 +149,61 @@ export default function BarbershopModal({
               {/* Form */}
               <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6">
                 <div className="space-y-4">
+                  {/* Image Upload */}
+                  <div>
+                    <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      Barbershop Image
+                    </label>
+                    <div className="space-y-3">
+                      {imagePreview && (
+                        <div className="relative w-full h-48 border border-gray-300 rounded-lg overflow-hidden group">
+                          <Image
+                            src={imagePreview}
+                            alt="Preview"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            unoptimized={imagePreview.startsWith('data:')}
+                          />
+                          <button
+                            type="button"
+                            onClick={handleRemoveImage}
+                            className="absolute top-2 right-2 p-2 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
+                            title="Remove image"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      )}
+                 {!imagePreview &&
+                       <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                         {imagePreview ? (
+                           <>
+                             <ImageIcon className="w-8 h-8 mb-2 text-gray-500" />
+                             <p className="text-sm text-gray-500">Click to change image</p>
+                           </>
+                         ) : (
+                           <>
+                             <Upload className="w-8 h-8 mb-2 text-gray-500" />
+                             <p className="text-sm text-gray-500">
+                               <span className="font-medium">Click to upload</span> or drag and drop
+                             </p>
+                             <p className="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 10MB</p>
+                           </>
+                         )}
+                       </div>
+                       <input
+                         type="file"
+                         accept="image/*"
+                         onChange={handleImageChange}
+                         className="hidden"
+                       />
+                     </label>
+                 }
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-sm font-semibold mb-2 text-gray-700">
                       Barbershop Name *
@@ -113,7 +213,7 @@ export default function BarbershopModal({
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
                       placeholder="Barbershop name"
                     />
                   </div>
@@ -127,7 +227,7 @@ export default function BarbershopModal({
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       rows={4}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 resize-none"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700 resize-none"
                       placeholder="Barbershop description"
                     />
                   </div>
@@ -141,7 +241,7 @@ export default function BarbershopModal({
                         required
                         value={formData.city}
                         onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
                       >
                         {cities.map((city) => (
                           <option key={city} value={city}>
@@ -159,7 +259,7 @@ export default function BarbershopModal({
                         required
                         value={formData.district}
                         onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
                       >
                         <option value="">Select</option>
                         {districts.map((district) => (
@@ -180,7 +280,7 @@ export default function BarbershopModal({
                       required
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
                       placeholder="Full address"
                     />
                   </div>
@@ -195,7 +295,7 @@ export default function BarbershopModal({
                         required
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
                         placeholder="+998901234567"
                       />
                     </div>
@@ -208,7 +308,7 @@ export default function BarbershopModal({
                         type="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
                         placeholder="email@example.com"
                       />
                     </div>
@@ -220,14 +320,14 @@ export default function BarbershopModal({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="flex-1 px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
+                    className="flex-1 px-4 py-2 bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
                   >
                     {loading ? 'Saving...' : 'Save'}
                   </button>

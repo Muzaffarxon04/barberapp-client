@@ -7,10 +7,12 @@ import { Plus, Edit, Trash2, MapPin, Phone } from 'lucide-react';
 import { mockBarbershops } from '@/lib/data';
 import { Barbershop } from '@/types';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 import BarbershopModal from '@/components/admin/BarbershopModal';
 import ConfirmModal from '@/components/ConfirmModal';
 
 export default function AdminBarbershopsPage() {
+  const router = useRouter();
   const [barbershops, setBarbershops] = useState(mockBarbershops);
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -92,13 +94,22 @@ export default function AdminBarbershopsPage() {
     setIsDeleteModalOpen(true);
   };
 
+  const handleCardClick = (barbershop: Barbershop, e: React.MouseEvent) => {
+    // Prevent navigation if clicking on buttons
+    const target = e.target as HTMLElement;
+    if (target.closest('button')) {
+      return;
+    }
+    router.push(`/admin/barbershops/${barbershop.id}`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Barbershops</h1>
-          <p className="text-gray-600">Manage all barbershops</p>
+          <h1 className="text-2xl font-medium text-gray-900 mb-1">Barbershops</h1>
+          <p className="text-sm text-gray-500">Manage all barbershops</p>
         </div>
         <button
           onClick={() => setIsCreateModalOpen(true)}
@@ -110,13 +121,13 @@ export default function AdminBarbershopsPage() {
       </div>
 
       {/* Search */}
-      <div className="bg-white rounded-xl p-4 border border-gray-200">
+      <div className="bg-white border border-gray-200 p-3">
         <input
           type="text"
           placeholder="Search barbershops..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white"
+          className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:border-gray-900 text-gray-900 placeholder:text-gray-400 bg-white"
         />
       </div>
 
@@ -128,7 +139,8 @@ export default function AdminBarbershopsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
-            className="bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200 hover:shadow-lg transition-shadow"
+            onClick={(e) => handleCardClick(barbershop, e)}
+            className="bg-white border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
           >
             {/* Image */}
             <div className="relative h-48">
@@ -165,14 +177,14 @@ export default function AdminBarbershopsPage() {
               <div className="flex items-center gap-2 pt-3 border-t border-gray-200">
                 <button
                   onClick={() => openEditModal(barbershop)}
-                  className="flex-1 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg font-medium hover:bg-blue-100 transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 text-sm"
                 >
                   <Edit className="h-4 w-4" />
                   Edit
                 </button>
                 <button
                   onClick={() => openDeleteModal(barbershop)}
-                  className="px-4 py-2 bg-red-50 text-red-700 rounded-lg font-medium hover:bg-red-100 transition-colors"
+                  className="px-3 py-2 border border-gray-300 text-red-600 hover:bg-red-50 transition-colors text-sm"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -183,7 +195,7 @@ export default function AdminBarbershopsPage() {
       </div>
 
       {filteredBarbershops.length === 0 && (
-        <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
+        <div className="text-center py-12 bg-white border border-gray-200">
           <p className="text-gray-600">Nothing found</p>
         </div>
       )}

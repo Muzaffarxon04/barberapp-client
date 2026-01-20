@@ -36,15 +36,6 @@ export default function ServiceModal({
   });
   const [loading, setLoading] = useState(false);
 
-  const categories: Array<{ value: Service['category']; label: string }> = [
-    { value: 'haircut', label: 'Haircut' },
-    { value: 'beard', label: 'Beard Trim' },
-    { value: 'haircut-beard', label: 'Haircut + Beard' },
-    { value: 'coloring', label: 'Hair Coloring' },
-    { value: 'styling', label: 'Hair Styling' },
-    { value: 'other', label: 'Other' },
-  ];
-
   useEffect(() => {
     if (mode === 'edit' && service) {
       setFormData({
@@ -94,7 +85,7 @@ export default function ServiceModal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed left-1/2 top-1/2 z-50 w-full max-w-2xl max-h-[90vh] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white shadow-2xl border border-gray-100 overflow-hidden"
+            className="fixed left-1/2 top-1/2 z-50 w-full max-w-2xl max-h-[90vh] -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-200 overflow-hidden"
           >
             <div className="flex flex-col h-full max-h-[90vh]">
               {/* Header */}
@@ -122,7 +113,7 @@ export default function ServiceModal({
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
                       placeholder="Service name"
                     />
                   </div>
@@ -135,33 +126,15 @@ export default function ServiceModal({
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       rows={3}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 resize-none"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700 resize-none"
                       placeholder="Service description"
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Category *
-                      </label>
-                      <select
-                        required
-                        value={formData.category}
-                        onChange={(e) => setFormData({ ...formData, category: e.target.value as Service['category'] })}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                      >
-                        {categories.map((cat) => (
-                          <option key={cat.value} value={cat.value}>
-                            {cat.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Price ($) *
+                        Price (UZS) *
                       </label>
                       <input
                         type="number"
@@ -169,7 +142,7 @@ export default function ServiceModal({
                         min="0"
                         value={formData.price}
                         onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) || 0 })}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
                         placeholder="50000"
                       />
                     </div>
@@ -185,7 +158,7 @@ export default function ServiceModal({
                         step="5"
                         value={formData.duration}
                         onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) || 30 })}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
                         placeholder="30"
                       />
                     </div>
@@ -197,14 +170,14 @@ export default function ServiceModal({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="flex-1 px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
+                    className="flex-1 px-4 py-2 bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
                   >
                     {loading ? 'Saving...' : 'Save'}
                   </button>

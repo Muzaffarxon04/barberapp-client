@@ -69,15 +69,15 @@ export default function AdminBookingsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return 'bg-green-100 text-green-700';
+        return 'bg-green-50 text-green-700';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-700';
+        return 'bg-yellow-50 text-yellow-700';
       case 'completed':
-        return 'bg-blue-100 text-blue-700';
+        return 'bg-gray-50 text-gray-700';
       case 'cancelled':
-        return 'bg-red-100 text-red-700';
+        return 'bg-red-50 text-red-700';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'bg-gray-50 text-gray-700';
     }
   };
 
@@ -100,27 +100,27 @@ export default function AdminBookingsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Bookings</h1>
-        <p className="text-gray-600">Manage all bookings</p>
+        <h1 className="text-2xl font-medium text-gray-900 mb-1">Bookings</h1>
+        <p className="text-sm text-gray-500">Manage all bookings</p>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 border border-gray-200 space-y-4">
-        <div className="flex flex-col md:flex-row gap-4">
+      <div className="bg-white border border-gray-200 p-3 space-y-3">
+        <div className="flex flex-col md:flex-row gap-3">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white"
+              className="w-full pl-9 pr-3 py-2 border border-gray-300 focus:outline-none focus:border-gray-900 text-gray-900 placeholder:text-gray-400 bg-white text-sm"
             />
           </div>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+            className="px-3 py-2 border border-gray-300 focus:outline-none focus:border-gray-900 text-gray-900 bg-white text-sm"
           >
             <option value="all">All Statuses</option>
             <option value="pending">Pending</option>
@@ -132,7 +132,7 @@ export default function AdminBookingsPage() {
       </div>
 
       {/* Bookings List */}
-      <div className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden">
+      <div className="bg-white border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
@@ -186,7 +186,7 @@ export default function AdminBookingsPage() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="font-medium text-gray-900">
-                      ${booking.price.toLocaleString()}
+                      {booking.price.toLocaleString()} UZS
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -203,7 +203,7 @@ export default function AdminBookingsPage() {
                       {booking.status === 'pending' && (
                         <button
                           onClick={() => handleStatusChange(booking.id, 'confirmed')}
-                          className="p-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
+                          className="p-2 border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
                           title="Confirm"
                         >
                           <CheckCircle className="h-4 w-4" />
@@ -212,7 +212,7 @@ export default function AdminBookingsPage() {
                       {(booking.status === 'pending' || booking.status === 'confirmed') && (
                         <button
                           onClick={() => handleStatusChange(booking.id, 'cancelled')}
-                          className="p-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors"
+                          className="p-2 border border-gray-300 text-red-600 hover:bg-red-50 transition-colors"
                           title="Cancel"
                         >
                           <XCircle className="h-4 w-4" />
@@ -221,7 +221,7 @@ export default function AdminBookingsPage() {
                       {booking.status === 'confirmed' && (
                         <button
                           onClick={() => handleStatusChange(booking.id, 'completed')}
-                          className="p-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
+                          className="p-2 border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
                           title="Complete"
                         >
                           <Clock className="h-4 w-4" />
@@ -237,7 +237,7 @@ export default function AdminBookingsPage() {
       </div>
 
       {filteredBookings.length === 0 && (
-        <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
+        <div className="text-center py-12 bg-white border border-gray-200">
           <p className="text-gray-600">Nothing found</p>
         </div>
       )}

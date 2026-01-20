@@ -81,7 +81,7 @@ export default function AdminLoginPage() {
       // Redirect to dashboard
       setTimeout(() => {
         router.push('/admin/dashboard');
-        router.refresh();
+        // router.refresh();
       }, 500);
     } catch (error) {
       console.error('Admin login error:', error);
