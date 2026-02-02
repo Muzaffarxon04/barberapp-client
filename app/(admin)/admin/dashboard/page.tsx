@@ -1,35 +1,43 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Store, Scissors, Calendar, Users } from 'lucide-react';
-import { mockBarbershops } from '@/lib/data';
+import { api, handleApiError, BookingResponse } from '@/lib/api/client';
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 export default function AdminDashboard() {
-  // Mock stats - TODO: Replace with API calls
-  const stats = {
-    totalBarbershops: mockBarbershops.length,
-    totalServices: mockBarbershops.reduce((sum, bs) => sum + bs.services.length, 0),
-    totalBookings: 156, // Mock
-    activeUsers: 89, // Mock
-  };
+  const [stats, setStats] = useState({
+    totalBarbershops: 0,
+    totalServices: 0,
+    totalBarbers: 0,
+    totalBookings: 0,
+    activeUsers: 0,
+    pendingBookings: 0,
+    confirmedBookings: 0,
+    completedBookings: 0,
+    totalRevenue: 0,
+    recentBookings: [] as BookingResponse[],
+  });
 
-  const recentBookings = [
-    {
-      id: '1',
-      barbershopName: 'Premium Barbershop',
-      serviceName: 'Soch olish',
-      date: '2024-01-15',
-      time: '14:00',
-      status: 'confirmed',
-    },
-    {
-      id: '2',
-      barbershopName: 'Modern Style',
-      serviceName: 'Soch + Soqol',
-      date: '2024-01-15',
-      time: '15:30',
-      status: 'pending',
-    },
-  ];
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setIsLoading(true);
+        const statsData = await api.admin.dashboard.getStats();
+        setStats(statsData);
+      } catch (error: unknown) {
+        const apiError = handleApiError(error as AxiosError);
+        toast.error(apiError.message || 'Failed to load dashboard data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -78,38 +86,47 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="text-2xl font-bold text-gray-900 mb-1">{stats.activeUsers}</div>
-          <div className="text-sm text-gray-600">Active Users</div>
+          <div className="text-sm text-gray-600">Total Users</div>
         </div>
       </div>
 
       {/* Recent Bookings */}
       <div className="bg-white border border-gray-200 p-6">
         <h2 className="text-lg font-medium text-gray-900 mb-4">Recent Bookings</h2>
-        <div className="space-y-3">
-          {recentBookings.map((booking) => (
-            <div
-              key={booking.id}
-              className="flex items-center justify-between p-3 border border-gray-200 hover:bg-gray-50 transition-colors"
-            >
-              <div className="flex-1">
-                <div className="text-sm font-medium text-gray-900">{booking.barbershopName}</div>
-                <div className="text-xs text-gray-600">{booking.serviceName}</div>
-                <div className="text-xs text-gray-500 mt-1">
-                  {booking.date} | {booking.time}
-                </div>
-              </div>
-              <span
-                className={`px-2 py-1 text-xs font-medium ${
-                  booking.status === 'confirmed'
-                    ? 'bg-green-50 text-green-700'
-                    : 'bg-yellow-50 text-yellow-700'
-                }`}
+        {isLoading ? (
+          <div className="text-center py-8 text-gray-500">Loading...</div>
+        ) : !stats.recentBookings || stats.recentBookings.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">No recent bookings</div>
+        ) : (
+          <div className="space-y-3">
+            {stats.recentBookings.map((booking) => (
+              <div
+                key={booking.id}
+                className="flex items-center justify-between p-3 border border-gray-200 hover:bg-gray-50 transition-colors"
               >
-                {booking.status === 'confirmed' ? 'Confirmed' : 'Pending'}
-              </span>
-            </div>
-          ))}
-        </div>
+                <div className="flex-1">
+                  <div className="text-sm font-medium text-gray-900">{booking.barbershopName}</div>
+                  <div className="text-xs text-gray-600">{booking.serviceName}</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {booking.date} | {booking.time}
+                  </div>
+                </div>
+                <span
+                  className={`px-2 py-1 text-xs font-medium ${booking.status === 'confirmed'
+                      ? 'bg-green-50 text-green-700'
+                      : booking.status === 'completed'
+                        ? 'bg-blue-50 text-blue-700'
+                        : booking.status === 'cancelled'
+                          ? 'bg-red-50 text-red-700'
+                          : 'bg-yellow-50 text-yellow-700'
+                    }`}
+                >
+                  {booking.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

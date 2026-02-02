@@ -58,7 +58,7 @@ export default function BarbershopCard({ barbershop, index = 0 }: BarbershopCard
             <div className="flex items-center justify-between pt-4 border-t border-gray-100">
               <div className="flex items-center gap-1 text-sm text-gray-500">
                 <Clock className="h-4 w-4 text-amber-500" />
-                <span>Today: {barbershop.workingHours.monday.open} - {barbershop.workingHours.monday.close}</span>
+                <span>Today: {barbershop.workingHours?.open} - {barbershop.workingHours?.close}</span>
               </div>
               <motion.span
                 whileHover={{ scale: 1.05 }}

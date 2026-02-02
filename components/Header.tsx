@@ -42,13 +42,7 @@ export default function Header() {
                 Home
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
               </Link>
-              <Link
-                href="/search"
-                className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors relative group"
-              >
-                Search
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
-              </Link>
+        
               <Link
                 href="/cart"
                 className="relative text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors group"

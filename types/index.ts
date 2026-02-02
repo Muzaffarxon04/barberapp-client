@@ -16,19 +16,23 @@ export interface Barbershop {
   city: string;
   district: string;
   phone: string;
-  email?: string;
+  email: string | null;
   rating?: number; // Deprecated - not used in UI
   reviewCount?: number; // Deprecated - not used in UI
   image: string;
   images?: string[];
-  workingHours: WorkingHours;
+  workingHours?: WorkingHours;
   services: Service[];
   barbers: Barber[];
   amenities?: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface WorkingHours {
-  [key: string]: { open: string; close: string; closed?: boolean };
+  open: string;
+  close: string;
+  closed: boolean;
 }
 
 export interface Service {

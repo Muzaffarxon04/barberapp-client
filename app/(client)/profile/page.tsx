@@ -11,15 +11,18 @@ import BookingModal from '@/components/BookingModal';
 export default function ProfilePage() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuthStore();
-  const { bookings } = useBookingStore();
+  const { bookings, fetchBookings } = useBookingStore();
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/');
+    } else {
+      // Fetch bookings when authenticated
+      fetchBookings().catch(console.error);
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router, fetchBookings]);
 
   if (!isAuthenticated || !user) {
     return null;

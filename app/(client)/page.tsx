@@ -3,21 +3,117 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Search, Scissors, MapPin } from 'lucide-react';
-import { mockBarbershops } from '@/lib/data';
 import BarbershopCard from '@/components/BarbershopCard';
+import { api, handleApiError, BarbershopResponse } from '@/lib/api/client';
+import { Barbershop } from '@/types';
+import toast from 'react-hot-toast';
+import { AxiosError } from 'axios';
 
 export default function Home() {
+  const [barbershops, setBarbershops] = useState<Barbershop[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [isLoading, setIsLoading] = useState(true);
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
+  // Fetch barbershops on mount
+  useEffect(() => {
+    const fetchBarbershops = async () => {
+      try {
+        setIsLoading(true);
+        const response = await api.barbershops.getAll();
+        const mappedBarbershops: Barbershop[] = response.items.map((item: BarbershopResponse) => ({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          address: item.address,
+          city: item.city,
+          district: item.district,
+          phone: item.phone,
+          email: item.email || undefined,
+          image: item.image,
+          images: item.images || [],
+          workingHours: item.workingHours || {},
+          services: [],
+          barbers: [],
+          amenities: item.amenities || [],
+        }));
+        setBarbershops(mappedBarbershops);
+      } catch (error: unknown) {
+        const apiError = handleApiError(error as AxiosError);
+        toast.error(apiError.message || 'Failed to load barbershops');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBarbershops();
+  }, []);
+
+  // Search barbershops via API
+  useEffect(() => {
+    const searchBarbershops = async () => {
+      if (!searchQuery.trim()) {
+        // Reset to all barbershops if search is empty
+        const response = await api.barbershops.getAll();
+        const mappedBarbershops: Barbershop[] = response.items.map((item: BarbershopResponse) => ({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          address: item.address,
+          city: item.city,
+          district: item.district,
+          phone: item.phone,
+          email: item.email || undefined,
+          image: item.image,
+          images: item.images || [],
+          workingHours: item.workingHours || {},
+          services: [],
+          barbers: [],
+          amenities: item.amenities || [],
+        }));
+        setBarbershops(mappedBarbershops);
+        return;
+      }
+
+      try {
+        const response = await api.barbershops.search({ search: searchQuery });
+        const mappedBarbershops: Barbershop[] = response.items.map((item: BarbershopResponse) => ({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          address: item.address,
+          city: item.city,
+          district: item.district,
+          phone: item.phone,
+          email: item.email || undefined,
+          image: item.image,
+          images: item.images || [],
+          workingHours: item.workingHours || {},
+          services: [],
+          barbers: [],
+          amenities: item.amenities || [],
+        }));
+        setBarbershops(mappedBarbershops);
+      } catch (error: unknown) {
+        const apiError = handleApiError(error as AxiosError);
+        console.error('Search error:', apiError);
+      }
+    };
+
+    const timeoutId = setTimeout(() => {
+      searchBarbershops();
+    }, 300); // Debounce search
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
   // Dropdown search results (max 5 items)
-  const dropdownResults = mockBarbershops.filter((bs) => {
+  const dropdownResults = barbershops.filter((bs) => {
     if (!searchQuery) return false;
     return (
       bs.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -27,14 +123,7 @@ export default function Home() {
   }).slice(0, 5);
 
   // Main page filtered results
-  const filteredBarbershops = mockBarbershops.filter((bs) => {
-    if (!searchQuery) return true;
-    return (
-      bs.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      bs.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      bs.address.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  });
+  const filteredBarbershops = barbershops;
 
   // Handle click outside
   useEffect(() => {
@@ -158,7 +247,7 @@ export default function Home() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-200 z-[9999] max-h-96 overflow-y-auto"
+                    className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-200  max-h-96 overflow-y-auto"
                   >
                     {dropdownResults.map((barbershop, index) => (
                       <motion.div
@@ -176,7 +265,7 @@ export default function Home() {
                       >
                         <div className="flex items-start gap-3">
                           {/* Image */}
-                          <div className="relative h-16 w-16 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200">
+                          <div className="relative h-16 w-16 rounded-lg overflow-hidden shrink-0 border border-gray-200">
                             <Image
                               src={barbershop.image}
                               alt={barbershop.name}
@@ -193,21 +282,21 @@ export default function Home() {
                               {barbershop.name}
                             </h4>
                             <div className="flex items-center gap-1.5 text-xs text-gray-600 mb-1.5">
-                              <MapPin className="h-3 w-3 flex-shrink-0" />
+                              <MapPin className="h-3 w-3 shrink-0" />
                               <span className="truncate text-left">
                                 {barbershop.district}, {barbershop.city}
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <Scissors className="h-3 w-3 text-blue-500 flex-shrink-0" />
+                              <Scissors className="h-3 w-3 text-blue-500 shrink-0" />
                               <span className="text-xs text-gray-500 text-left">
-                                {barbershop.services.length} services
+                                Services available
                               </span>
                             </div>
                           </div>
                           
                           {/* Arrow indicator */}
-                          <div className="flex-shrink-0 pt-1">
+                          <div className="shrink-0 pt-1">
                             <div className={`h-8 w-8 rounded-full flex items-center justify-center transition-colors ${
                               focusedIndex === index
                                 ? 'bg-blue-500 text-white'
@@ -240,7 +329,7 @@ export default function Home() {
               className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
             >
               <div className="text-5xl font-bold text-gray-900 mb-2">
-                {mockBarbershops.length}+
+                {barbershops.length}+
               </div>
               <div className="text-gray-600 font-medium">Barbershops</div>
             </motion.div>
@@ -283,7 +372,11 @@ export default function Home() {
             </p>
           </motion.div>
 
-          {filteredBarbershops.length > 0 ? (
+          {isLoading ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600 text-lg">Loading barbershops...</p>
+            </div>
+          ) : filteredBarbershops.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredBarbershops.map((barbershop, index) => (
                 <BarbershopCard key={barbershop.id} barbershop={barbershop} index={index} />

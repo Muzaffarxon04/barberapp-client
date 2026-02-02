@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useAuthStore } from '@/lib/stores/authStore';
-import toast from 'react-hot-toast';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -14,13 +13,13 @@ interface AuthModalProps {
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
-    phone: '',
     password: '',
+    name: '',
+    phone: '',
   });
   const [loading, setLoading] = useState(false);
-  const { login, register } = useAuthStore();
+  const { login, register, isLoading: authLoading } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,20 +28,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     try {
       if (isLogin) {
         await login(formData.email, formData.password);
-        toast.success('Successfully logged in!', {
-          icon: '👋',
-        });
       } else {
         await register(formData.name, formData.email, formData.phone, formData.password);
-        toast.success('Successfully registered!', {
-          icon: '🎉',
-        });
       }
       onClose();
-      setFormData({ name: '', email: '', phone: '', password: '' });
+      setFormData({ email: '', password: '', name: '', phone: '' });
     } catch (error) {
+      // Error is already handled in the store
       console.error('Auth error:', error);
-      toast.error('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -79,19 +72,32 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
-                <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-700">Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                    placeholder="Enter your name"
-                  />
-                </div>
-              )}
+                <>
+                  <div>
+                    <label className="block text-sm font-semibold mb-2 text-gray-700">Full Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                      placeholder="Ali Valiyev"
+                    />
+                  </div>
 
+                  <div>
+                    <label className="block text-sm font-semibold mb-2 text-gray-700">Phone Number</label>
+                    <input
+                      type="tel"
+                      required
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                      placeholder="+998901234567"
+                    />
+                  </div>
+                </>
+              )}
               <div>
                 <label className="block text-sm font-semibold mb-2 text-gray-700">Email</label>
                 <input
@@ -104,38 +110,28 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 />
               </div>
 
-              {!isLogin && (
-                <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-700">Phone</label>
-                  <input
-                    type="tel"
-                    required
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
-                    placeholder="+998901234567"
-                  />
-                </div>
-              )}
-
               <div>
                 <label className="block text-sm font-semibold mb-2 text-gray-700">Password</label>
                 <input
                   type="password"
                   required
+                  minLength={4}
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
                   placeholder="••••••••"
                 />
+                {!isLogin && (
+                  <p className="text-xs text-gray-500 mt-1">Minimum 8 characters</p>
+                )}
               </div>
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || authLoading}
                 className="w-full py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
               >
-                {loading ? 'Loading...' : isLogin ? 'Login' : 'Register'}
+                {loading || authLoading ? 'Loading...' : isLogin ? 'Login' : 'Register'}
               </button>
             </form>
 

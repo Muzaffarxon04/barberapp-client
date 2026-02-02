@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, Clock, MapPin, Scissors, User, DollarSign, CheckCircle } from 'lucide-react';
+import { X, Calendar, Clock, Scissors, User, DollarSign, CheckCircle } from 'lucide-react';
 import { Booking, BookingStatus } from '@/types';
 import { format } from 'date-fns';
 
@@ -73,7 +73,7 @@ export default function BookingModal({ isOpen, onClose, booking }: BookingModalP
               {/* Booking Details */}
               <div className="space-y-6">
                 {/* Barbershop Info */}
-                <div className="border-b border-gray-200 pb-4">
+                <div className="text-black border-b border-gray-200 pb-4">Book Appointment
                   <div className="flex items-center gap-2 mb-2">
                     <Scissors className="h-5 w-5 text-gray-400" />
                     <h3 className="text-lg font-medium text-gray-900">{booking.barbershopName}</h3>

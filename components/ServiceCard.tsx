@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Clock, DollarSign } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { Service } from '@/types';
 
 interface ServiceCardProps {

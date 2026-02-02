@@ -16,13 +16,12 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ConfirmModal from '@/components/ConfirmModal';
+import { tokenManager } from '@/lib/api/client';
 
 interface AdminSession {
   id: string;
-  email: string;
-  name: string;
-  role: 'admin';
-  token: string;
+  username: string;
+  full_name: string;
 }
 
 export default function AdminLayout({
@@ -33,53 +32,33 @@ export default function AdminLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  // Initialize state from localStorage to avoid synchronous setState in effect
-  const [adminSession, setAdminSession] = useState<AdminSession | null>(() => {
-    if (typeof window === 'undefined') return null;
-    try {
-      const session = localStorage.getItem('admin-session');
-      if (session) {
-        const parsed: AdminSession = JSON.parse(session);
-        if (parsed.role === 'admin' && parsed.token) {
-          return parsed;
-        }
-      }
-    } catch {
-      // Ignore parsing errors during initialization
-    }
-    return null;
-  });
+
+  const [adminSession, setAdminSession] = useState<AdminSession | null>(null);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  // Check admin session and handle redirects (but only for protected routes, not login page)
+  // Initial check
   useEffect(() => {
-    // Skip check for login page
-    if (pathname === '/admin') {
-      return;
-    }
+    if (pathname === '/admin') return;
 
-    // Check admin session and handle redirects if needed
-    const session = localStorage.getItem('admin-session');
-    if (!session || !adminSession) {
+    // Check for admin token
+    const token = tokenManager.getAdminAccessToken();
+    const userStr = localStorage.getItem('admin_user');
+
+    if (!token || !userStr) {
       toast.error('Admin access required');
       router.push('/admin');
       return;
     }
 
     try {
-      const parsed: AdminSession = JSON.parse(session);
-      if (parsed.role !== 'admin' || !parsed.token) {
-        localStorage.removeItem('admin-session');
-        toast.error('Admin access required');
-        router.push('/admin');
-        return;
-      }
+      const user = JSON.parse(userStr);
+      setAdminSession(user);
     } catch {
-      localStorage.removeItem('admin-session');
-      toast.error('Admin access required');
+      localStorage.removeItem('admin_user');
+      tokenManager.clearAdminTokens();
       router.push('/admin');
     }
-  }, [router, pathname, adminSession]);
+  }, [pathname, router]);
 
   // Don't show dashboard layout on login page
   if (pathname === '/admin') {
@@ -91,7 +70,8 @@ export default function AdminLayout({
   };
 
   const handleLogoutConfirm = () => {
-    localStorage.removeItem('admin-session');
+    tokenManager.clearAdminTokens();
+    localStorage.removeItem('admin_user');
     toast.success('Logged out from admin panel');
     router.push('/admin');
     router.refresh();
@@ -103,7 +83,7 @@ export default function AdminLayout({
     { href: '/admin/services', icon: Scissors, label: 'Services' },
     { href: '/admin/bookings', icon: Calendar, label: 'Bookings' },
   ];
-  
+
   // Check if active route matches or starts with menu item href
   const isActiveRoute = (href: string) => {
     if (href === '/admin/dashboard') {
@@ -117,9 +97,8 @@ export default function AdminLayout({
     <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-40 transition-transform duration-300 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0`}
+        className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-40 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } lg:translate-x-0`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
@@ -150,11 +129,10 @@ export default function AdminLayout({
                   key={item.href}
                   href={item.href}
                   onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                    isActive
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive
                       ? 'bg-gray-50 text-gray-900 border border-gray-300'
                       : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                    }`}
                 >
                   <Icon className={`h-5 w-5 ${isActive ? 'text-gray-900' : 'text-gray-500'}`} />
                   <span className="font-medium">{item.label}</span>
@@ -163,7 +141,7 @@ export default function AdminLayout({
             })}
           </nav>
 
-       
+
         </div>
       </aside>
 
@@ -185,8 +163,8 @@ export default function AdminLayout({
                     <Shield className="h-4 w-4 text-white" />
                   </div>
                   <div className="hidden md:block text-right">
-                    <div className="text-sm font-semibold text-gray-900">{adminSession.name}</div>
-                    <div className="text-xs text-gray-500">{adminSession.email}</div>
+                    <div className="text-sm font-semibold text-gray-900">{adminSession.full_name}</div>
+                    <div className="text-xs text-gray-500">@{adminSession.username}</div>
                   </div>
                   <button
                     onClick={handleLogoutClick}

@@ -6,6 +6,9 @@ import { X, Upload, Image as ImageIcon, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { Barbershop } from '@/types';
 import { cities, districts } from '@/lib/data';
+import { api, handleApiError } from '@/lib/api/client';
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 interface BarbershopModalProps {
   isOpen: boolean;
@@ -31,6 +34,11 @@ export default function BarbershopModal({
     phone: '',
     email: '',
     image: '',
+    workingHours: {
+      open: '09:00',
+      close: '20:00',
+      closed: false
+    }
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -47,6 +55,11 @@ export default function BarbershopModal({
         phone: barbershop.phone || '',
         email: barbershop.email || '',
         image: barbershop.image || '',
+        workingHours: barbershop.workingHours || {
+          open: '09:00',
+          close: '20:00',
+          closed: false
+        }
       });
       setImagePreview(barbershop.image || null);
       setImageFile(null);
@@ -60,6 +73,11 @@ export default function BarbershopModal({
         phone: '',
         email: '',
         image: '',
+        workingHours: {
+          open: '09:00',
+          close: '20:00',
+          closed: false
+        }
       });
       setImagePreview(null);
       setImageFile(null);
@@ -93,23 +111,26 @@ export default function BarbershopModal({
     setLoading(true);
 
     try {
-      // If new image file is selected, convert to base64 or upload
+      let imageUrl = formData.image;
+
+      // If new image file is selected, upload it first
       if (imageFile) {
-        // For now, we'll use base64. In production, upload to server and get URL
-        const reader = new FileReader();
-        reader.readAsDataURL(imageFile);
-        reader.onloadend = async () => {
-          const base64Image = reader.result as string;
-          await onSave({ ...formData, image: base64Image });
-          onClose();
-        };
-        return;
+        try {
+          const uploadResult = await api.admin.barbershops.uploadImage(imageFile);
+          imageUrl = uploadResult.url;
+        } catch (error: unknown) {
+          const apiError = handleApiError(error as AxiosError);
+          toast.error(apiError.message || 'Failed to upload image');
+          setLoading(false);
+          return;
+        }
       }
-      
-      await onSave(formData);
+
+      await onSave({ ...formData, image: imageUrl });
       onClose();
-    } catch (error) {
-      console.error('Save error:', error);
+    } catch (error: unknown) {
+      const apiError = handleApiError(error as AxiosError);
+      toast.error(apiError.message || 'Failed to save barbershop');
     } finally {
       setLoading(false);
     }
@@ -175,32 +196,32 @@ export default function BarbershopModal({
                           </button>
                         </div>
                       )}
-                 {!imagePreview &&
-                       <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                         {imagePreview ? (
-                           <>
-                             <ImageIcon className="w-8 h-8 mb-2 text-gray-500" />
-                             <p className="text-sm text-gray-500">Click to change image</p>
-                           </>
-                         ) : (
-                           <>
-                             <Upload className="w-8 h-8 mb-2 text-gray-500" />
-                             <p className="text-sm text-gray-500">
-                               <span className="font-medium">Click to upload</span> or drag and drop
-                             </p>
-                             <p className="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 10MB</p>
-                           </>
-                         )}
-                       </div>
-                       <input
-                         type="file"
-                         accept="image/*"
-                         onChange={handleImageChange}
-                         className="hidden"
-                       />
-                     </label>
-                 }
+                      {!imagePreview &&
+                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            {imagePreview ? (
+                              <>
+                                <ImageIcon className="w-8 h-8 mb-2 text-gray-500" />
+                                <p className="text-sm text-gray-500">Click to change image</p>
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="w-8 h-8 mb-2 text-gray-500" />
+                                <p className="text-sm text-gray-500">
+                                  <span className="font-medium">Click to upload</span> or drag and drop
+                                </p>
+                                <p className="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 10MB</p>
+                              </>
+                            )}
+                          </div>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="hidden"
+                          />
+                        </label>
+                      }
                     </div>
                   </div>
 
@@ -311,6 +332,52 @@ export default function BarbershopModal({
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
                         placeholder="email@example.com"
                       />
+                    </div>
+                  </div>
+
+                  <div className="border-t border-gray-100 pt-4">
+                    <label className="block text-sm font-semibold mb-4 text-gray-700">
+                      Working Hours
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-xs text-gray-500 mb-1">Open</label>
+                        <input
+                          type="time"
+                          value={formData.workingHours.open}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            workingHours: { ...formData.workingHours, open: e.target.value }
+                          })}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-500 mb-1">Close</label>
+                        <input
+                          type="time"
+                          value={formData.workingHours.close}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            workingHours: { ...formData.workingHours, close: e.target.value }
+                          })}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 text-gray-700"
+                        />
+                      </div>
+                      <div className="flex items-end pb-3">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={formData.workingHours.closed}
+                            onChange={(e) => setFormData({
+                              ...formData,
+                              workingHours: { ...formData.workingHours, closed: e.target.checked }
+                            })}
+                            className="w-5 h-5 rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                          />
+                          <span className="text-sm font-medium text-gray-700">Closed</span>
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>

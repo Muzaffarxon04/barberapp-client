@@ -1,24 +1,24 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useCartStore } from '@/lib/stores/cartStore';
 import { useAuthStore } from '@/lib/stores/authStore';
 import { useBookingStore } from '@/lib/stores/bookingStore';
 import { Trash2, Calendar, Clock, MapPin, Scissors, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
 import toast from 'react-hot-toast';
-import { Booking } from '@/types';
+import { api, handleApiError } from '@/lib/api/client';
+import { AxiosError } from 'axios';
 import SuccessModal from '@/components/SuccessModal';
 
 export default function CartPage() {
   const { items, removeFromCart, clearCart, getTotalPrice, getTotalDuration } = useCartStore();
   const { isAuthenticated } = useAuthStore();
-  const { addBooking } = useBookingStore();
+  const { fetchBookings } = useBookingStore();
   const router = useRouter();
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const bookingIdCounter = useRef(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCheckout = async () => {
     if (!isAuthenticated) {
@@ -33,45 +33,27 @@ export default function CartPage() {
       return;
     }
 
+    setIsLoading(true);
     const loadingToast = toast.loading('Booking...');
 
     try {
-      // TODO: Replace with actual API call
-      // await api.bookings.createMultiple(items);
-      
-      // Create bookings from cart items BEFORE clearing cart
-      const currentTime = new Date().toISOString();
-      const bookingsToAdd: Booking[] = [];
-      
-      items.forEach((item) => {
-        bookingIdCounter.current += 1;
-        const booking: Booking = {
-          id: `booking-${currentTime}-${bookingIdCounter.current}`,
-          barbershopId: item.barbershopId,
-          barbershopName: item.barbershopName,
-          barberId: item.barberId,
-          barberName: item.barberName,
-          serviceId: item.serviceId,
-          serviceName: item.serviceName,
-          date: item.date,
-          time: item.time,
-          price: item.price,
-          duration: item.duration,
-          status: 'confirmed',
-          createdAt: currentTime,
-        };
-        bookingsToAdd.push(booking);
-      });
-      
-      // Add all bookings to store
-      bookingsToAdd.forEach((booking) => {
-        addBooking(booking);
-      });
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Prepare bookings data for API
+      const bookingsData = items.map((item) => ({
+        barbershopId: item.barbershopId,
+        barberId: item.barberId,
+        serviceId: item.serviceId,
+        date: item.date,
+        time: item.time,
+      }));
+
+      // Create bookings via API
+      await api.bookings.createMultiple({ bookings: bookingsData });
       
       toast.dismiss(loadingToast);
+      toast.success('Bookings created successfully');
+      
+      // Refresh bookings list
+      await fetchBookings();
       
       // Clear cart AFTER bookings are saved
       clearCart();
@@ -80,9 +62,12 @@ export default function CartPage() {
       setTimeout(() => {
         setIsSuccessModalOpen(true);
       }, 100);
-    } catch (error) {
+    } catch (error: unknown) {
       toast.dismiss(loadingToast);
-      toast.error('An error occurred. Please try again.');
+      const apiError = handleApiError(error as AxiosError);
+      toast.error(apiError.message || 'An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -169,7 +154,7 @@ export default function CartPage() {
                       <Trash2 className="h-5 w-5 text-red-500" />
                     </button>
                     <div className="text-xl font-bold text-gray-900">
-                      ${item.price.toLocaleString()}
+                      {item.price.toLocaleString()} UZS
                     </div>
                   </div>
                 </div>
@@ -196,7 +181,7 @@ export default function CartPage() {
               <div className="flex justify-between text-2xl font-bold pt-4 border-t border-gray-200">
                 <span className="text-gray-800">Total:</span>
                 <span className="text-gray-900">
-                  ${getTotalPrice().toLocaleString()}
+                  {getTotalPrice().toLocaleString()} UZS
                 </span>
               </div>
             </div>
@@ -213,9 +198,10 @@ export default function CartPage() {
               </button>
               <button
                 onClick={handleCheckout}
-                className="flex-1 px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
+                disabled={isLoading}
+                className="flex-1 px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Book Now
+                {isLoading ? 'Booking...' : 'Book Now'}
               </button>
             </div>
           </motion.div>
