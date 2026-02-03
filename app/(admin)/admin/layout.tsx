@@ -130,8 +130,8 @@ export default function AdminLayout({
                   href={item.href}
                   onClick={() => setSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive
-                      ? 'bg-gray-50 text-gray-900 border border-gray-300'
-                      : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-gray-50 text-gray-900 border border-gray-300'
+                    : 'text-gray-700 hover:bg-gray-100'
                     }`}
                 >
                   <Icon className={`h-5 w-5 ${isActive ? 'text-gray-900' : 'text-gray-500'}`} />

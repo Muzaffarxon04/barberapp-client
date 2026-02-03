@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, Clock, Scissors } from 'lucide-react';
 import { Barbershop } from '@/types';
-
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 interface BarbershopCardProps {
   barbershop: Barbershop;
   index?: number;
@@ -25,7 +25,7 @@ export default function BarbershopCard({ barbershop, index = 0 }: BarbershopCard
           {/* Image */}
           <div className="relative h-56 overflow-hidden">
             <Image
-              src={barbershop.image}
+              src={BASE_URL?.slice(0, -4) + barbershop.image}
               alt={barbershop.name}
               fill
               className="object-cover"
@@ -33,12 +33,12 @@ export default function BarbershopCard({ barbershop, index = 0 }: BarbershopCard
               unoptimized={barbershop.image.startsWith('http')}
             />
             <div className="absolute inset-0 bg-black/50" />
-            <div className="absolute top-4 right-4">
+            {/* <div className="absolute top-4 right-4">
               <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
                 <Scissors className="h-4 w-4 text-white" />
                 <span className="text-sm font-bold text-white">{barbershop.services.length} services</span>
               </div>
-            </div>
+            </div> */}
             <div className="absolute bottom-0 left-0 right-0 p-5">
               <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">{barbershop.name}</h3>
             </div>

@@ -9,7 +9,7 @@ import { cities, districts } from '@/lib/data';
 import { api, handleApiError } from '@/lib/api/client';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
-
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 interface BarbershopModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -179,7 +179,7 @@ export default function BarbershopModal({
                       {imagePreview && (
                         <div className="relative w-full h-48 border border-gray-300 rounded-lg overflow-hidden group">
                           <Image
-                            src={imagePreview}
+                            src={BASE_URL?.slice(0, -4) + imagePreview}
                             alt="Preview"
                             fill
                             className="object-cover"

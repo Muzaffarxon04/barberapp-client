@@ -154,7 +154,7 @@ export default function CartPage() {
                       <Trash2 className="h-5 w-5 text-red-500" />
                     </button>
                     <div className="text-xl font-bold text-gray-900">
-                      {item.price.toLocaleString()} UZS
+                      {Number(item.price)?.toLocaleString()} UZS
                     </div>
                   </div>
                 </div>
@@ -181,7 +181,7 @@ export default function CartPage() {
               <div className="flex justify-between text-2xl font-bold pt-4 border-t border-gray-200">
                 <span className="text-gray-800">Total:</span>
                 <span className="text-gray-900">
-                  {getTotalPrice().toLocaleString()} UZS
+                  {Number(getTotalPrice())?.toLocaleString() || 0} UZS
                 </span>
               </div>
             </div>

@@ -25,8 +25,7 @@ export interface Barbershop {
   services: Service[];
   barbers: Barber[];
   amenities?: string[];
-  createdAt: string;
-  updatedAt: string;
+ 
 }
 
 export interface WorkingHours {

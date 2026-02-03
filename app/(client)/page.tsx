@@ -34,13 +34,17 @@ export default function Home() {
           city: item.city,
           district: item.district,
           phone: item.phone,
-          email: item.email || undefined,
+          email: item.email,
           image: item.image,
           images: item.images || [],
           workingHours: item.workingHours || {},
           services: [],
           barbers: [],
           amenities: item.amenities || [],
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+
+
         }));
         setBarbershops(mappedBarbershops);
       } catch (error: unknown) {
@@ -68,13 +72,15 @@ export default function Home() {
           city: item.city,
           district: item.district,
           phone: item.phone,
-          email: item.email || undefined,
+          email: item.email,
           image: item.image,
           images: item.images || [],
           workingHours: item.workingHours || {},
           services: [],
           barbers: [],
           amenities: item.amenities || [],
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
         }));
         setBarbershops(mappedBarbershops);
         return;
@@ -90,13 +96,15 @@ export default function Home() {
           city: item.city,
           district: item.district,
           phone: item.phone,
-          email: item.email || undefined,
+          email: item.email,
           image: item.image,
           images: item.images || [],
           workingHours: item.workingHours || {},
           services: [],
           barbers: [],
           amenities: item.amenities || [],
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
         }));
         setBarbershops(mappedBarbershops);
       } catch (error: unknown) {
@@ -155,7 +163,7 @@ export default function Home() {
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setFocusedIndex((prev) => 
+      setFocusedIndex((prev) =>
         prev < dropdownResults.length - 1 ? prev + 1 : prev
       );
     } else if (e.key === 'ArrowUp') {
@@ -257,11 +265,10 @@ export default function Home() {
                         transition={{ delay: index * 0.05 }}
                         onClick={() => handleSelectBarbershop(barbershop.id)}
                         onMouseEnter={() => setFocusedIndex(index)}
-                        className={`p-3 cursor-pointer transition-all border-b border-gray-100 last:border-b-0 ${
-                          focusedIndex === index
-                            ? 'bg-gray-50 border-gray-300'
-                            : 'bg-white hover:bg-gray-50'
-                        }`}
+                        className={`p-3 cursor-pointer transition-all border-b border-gray-100 last:border-b-0 ${focusedIndex === index
+                          ? 'bg-gray-50 border-gray-300'
+                          : 'bg-white hover:bg-gray-50'
+                          }`}
                       >
                         <div className="flex items-start gap-3">
                           {/* Image */}
@@ -275,7 +282,7 @@ export default function Home() {
                               unoptimized={barbershop.image.startsWith('http')}
                             />
                           </div>
-                          
+
                           {/* Content */}
                           <div className="flex-1 min-w-0 flex flex-col">
                             <h4 className="font-bold text-gray-900 mb-1.5 truncate text-sm text-left">
@@ -294,14 +301,13 @@ export default function Home() {
                               </span>
                             </div>
                           </div>
-                          
+
                           {/* Arrow indicator */}
                           <div className="shrink-0 pt-1">
-                            <div className={`h-8 w-8 rounded-full flex items-center justify-center transition-colors ${
-                              focusedIndex === index
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-gray-100 text-gray-400'
-                            }`}>
+                            <div className={`h-8 w-8 rounded-full flex items-center justify-center transition-colors ${focusedIndex === index
+                              ? 'bg-blue-500 text-white'
+                              : 'bg-gray-100 text-gray-400'
+                              }`}>
                               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                               </svg>

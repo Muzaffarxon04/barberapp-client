@@ -14,7 +14,7 @@ import toast from 'react-hot-toast';
 import { api, handleApiError, ServiceResponse, BarberResponse } from '@/lib/api/client';
 import { Barbershop, Service, Barber, TimeSlot } from '@/types';
 import { AxiosError } from 'axios';
-
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function BarbershopDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -56,8 +56,8 @@ export default function BarbershopDetailPage() {
           services: [],
           barbers: [],
           amenities: data.amenities || [],
-          createdAt: (data as any).createdAt || new Date().toISOString(),
-          updatedAt: (data as any).updatedAt || new Date().toISOString(),
+          // createdAt: (data as any).createdAt || new Date().toISOString(),
+          // updatedAt: (data as any).updatedAt || new Date().toISOString(),
         };
 
         setBarbershop(mappedBarbershop);
@@ -243,7 +243,7 @@ export default function BarbershopDetailPage() {
       {/* Header Image */}
       <div className="relative h-64 md:h-96 overflow-hidden">
         <Image
-          src={barbershop.image}
+          src={BASE_URL?.slice(0, -4) + barbershop.image}
           alt={barbershop.name}
           fill
           className="object-cover"

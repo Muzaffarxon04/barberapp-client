@@ -6,14 +6,17 @@ import { format } from 'date-fns';
 import { useAuthStore } from '@/lib/stores/authStore';
 import { useBookingStore } from '@/lib/stores/bookingStore';
 import { Booking, BookingStatus } from '@/types';
+import ConfirmModal from '@/components/ConfirmModal';
 import BookingModal from '@/components/BookingModal';
 
 export default function ProfilePage() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuthStore();
-  const { bookings, fetchBookings } = useBookingStore();
+  const { bookings, fetchBookings, cancelBooking } = useBookingStore();
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cancelId, setCancelId] = useState<string | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -50,6 +53,24 @@ export default function ProfilePage() {
     return format(date, 'dd.MM.yyyy');
   };
 
+  const handleCancelClick = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation(); // Prevent opening the details modal
+    setCancelId(id);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    if (cancelId) {
+      try {
+        await cancelBooking(cancelId);
+        setIsConfirmModalOpen(false);
+        setCancelId(null);
+      } catch (error) {
+        console.error('Failed to cancel booking:', error);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -78,7 +99,7 @@ export default function ProfilePage() {
 
         <div>
           <h2 className="text-lg font-medium text-gray-900 mb-4">Appointment History</h2>
-          
+
           {sortedBookings.length === 0 ? (
             <div className="py-12 text-center">
               <p className="text-sm text-gray-500">No appointments yet</p>
@@ -101,9 +122,19 @@ export default function ProfilePage() {
                       </h3>
                       <p className="text-xs text-gray-500">{booking.serviceName}</p>
                     </div>
-                    <span className={`text-xs font-medium ${getStatusColor(booking.status)}`}>
-                      {booking.status}
-                    </span>
+                    <div className="flex flex-col items-end gap-2">
+                      <span className={`text-xs font-medium ${getStatusColor(booking.status)}`}>
+                        {booking.status}
+                      </span>
+                      {(booking.status === 'pending' || booking.status === 'confirmed') && (
+                        <button
+                          onClick={(e) => handleCancelClick(e, booking.id)}
+                          className="text-xs text-red-600 hover:text-red-700 font-medium px-4 py-1 rounded bg-red-200 hover:bg-red-100 transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 text-xs">
@@ -146,6 +177,20 @@ export default function ProfilePage() {
           setSelectedBooking(null);
         }}
         booking={selectedBooking}
+      />
+
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => {
+          setIsConfirmModalOpen(false);
+          setCancelId(null);
+        }}
+        onConfirm={handleConfirmCancel}
+        title="Cancel Appointment"
+        message="Are you sure you want to cancel this appointment? This action cannot be undone."
+        confirmText="Yes, Cancel"
+        cancelText="No, Keep It"
+        variant="danger"
       />
     </div>
   );

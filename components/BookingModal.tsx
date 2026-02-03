@@ -139,7 +139,7 @@ export default function BookingModal({ isOpen, onClose, booking }: BookingModalP
                       <span className="text-sm font-medium text-gray-900">Total Price</span>
                     </div>
                     <span className="text-xl font-bold text-gray-900">
-                      {booking.price.toLocaleString()} UZS
+                      {Number(booking.price || 0)?.toLocaleString()} UZS
                     </span>
                   </div>
                 </div>
