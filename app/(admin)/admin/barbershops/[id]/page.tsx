@@ -320,7 +320,7 @@ export default function AdminBarbershopDetailPage() {
             )}
 
             <div className="pt-4 flex flex-col gap-1">
-              <span className="text-[10px] text-gray-400 uppercase">Created: {new Date(barbershop.createdAt).toLocaleString()}</span>
+              <span className="text-[10px] text-gray-400 uppercase">Created: {barbershop.createdAt ? new Date(barbershop.createdAt).toLocaleString() : 'Not set'}</span>
              
             </div>
           </div>
